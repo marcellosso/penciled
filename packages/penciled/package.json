@@ -1,7 +1,7 @@
 {
   "name": "penciled",
   "version": "0.5.1",
-  "description": "penciled.js: a 15 kB open-source JavaScript library for persistent text highlights and notes on any web page.",
+  "description": "penciled.org, JavaScript highlights & notes library: 15 kB, open source, persistent text highlights and notes on any web page, painted with the CSS Custom Highlight API.",
   "license": "MIT",
   "author": "Marcel Losso",
   "repository": {
@@ -14,6 +14,7 @@
   "keywords": [
     "penciled",
     "penciled.js",
+    "penciled.org",
     "annotation",
     "annotations",
     "highlight",
@@ -22,6 +23,7 @@
     "comments",
     "selection",
     "highlight-api",
+    "css-custom-highlight-api",
     "highlighter",
     "text-highlight",
     "web-annotation",

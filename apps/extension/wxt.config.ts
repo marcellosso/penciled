@@ -38,7 +38,7 @@ export default defineConfig({
     short_name: 'penciled',
     description:
       'Highlight text and take notes on any website. Your highlights come back when you return. Nothing leaves your browser.',
-    homepage_url: 'https://penciled.org/extension/',
+    homepage_url: 'https://www.penciled.org/extension/',
     // The first versions with both the Highlight API and light-dark(), which penciled's colors use.
     ...(browser === 'firefox'
       ? {

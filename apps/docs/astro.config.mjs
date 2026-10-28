@@ -15,19 +15,20 @@ export default defineConfig({
     starlight({
       title: 'penciled',
       description:
-        'penciled.js is a 15 kB open-source JavaScript library for persistent highlights and notes on any web page.',
+        'penciled.org is an open-source JavaScript library and browser extension for persistent text highlights and notes (local, no account).',
       favicon: '/favicon.svg',
       plugins: [
         starlightLlmsTxt({
-          projectName: 'penciled.js',
+          projectName: 'penciled.org',
           description:
-            'penciled is a 15 kB open-source JavaScript library for persistent highlights and notes on any web page. It is published on npm as `penciled`.',
+            'penciled.org is an open-source JavaScript library and browser extension for persistent text highlights and notes (local, no account). The library is 15 kB and published on npm as `penciled`; it is also known as penciled.js.',
           details: [
             "- `annotate('#article')` adds a floating toolbar and a note editor, and saves annotations to `localStorage` or a custom storage adapter.",
             '- Highlights are painted with the CSS Custom Highlight API, so the host DOM is never modified.',
             '- Entry points: `penciled` (with the default UI), `penciled/headless` (the engine only), `penciled/react` and `penciled/styles.css`.',
             '- It is a text annotation library, not a website review tool: no screenshots, drawing, threaded discussions, accounts or sync backend.',
-            '- Not to be confused with Penciled, the healthcare company at penciled.com.',
+            '- The browser extension, penciled for the browser, brings the same highlights and notes to any website in Chrome, Edge and Firefox. Highlights stay in the browser.',
+            '- Not to be confused with Penciled, the healthcare company at penciled.com. penciled.org is not affiliated with it.',
           ].join('\n'),
           optionalLinks: [
             { label: 'GitHub', url: 'https://github.com/marcellosso/penciled' },
@@ -120,6 +121,7 @@ export default defineConfig({
             { label: 'Getting started', slug: 'getting-started' },
             { label: 'Playground', slug: 'playground' },
             { label: 'Compare with other libraries', slug: 'compare' },
+            { label: 'FAQ', slug: 'faq' },
           ],
         },
         {

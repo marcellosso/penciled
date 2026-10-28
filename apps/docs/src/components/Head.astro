@@ -3,6 +3,7 @@
 // (cookieless, so no consent banner).
 import Default from '@astrojs/starlight/components/Head.astro';
 import Analytics from '@vercel/analytics/astro';
+import { disambiguation, faq } from '../faq.ts';
 
 const route = Astro.locals.starlightRoute;
 const { data } = route.entry;
@@ -16,17 +17,29 @@ if (data.metaTitle) {
   }
 }
 
-// The 404 page is served at every missing URL, so it must not be indexed or claim a canonical URL.
+// The 404 page is served at every missing URL, so it must not be indexed. Its canonical still
+// names the www host, so no tag on the site ever points at the apex domain.
 const notFound = route.id === '404';
+const site = Astro.site && new URL('/', Astro.site);
 if (notFound) {
   route.head = route.head.filter(
     (tag) => tag.attrs?.rel !== 'canonical' && tag.attrs?.property !== 'og:url',
   );
   route.head.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex' } });
+  if (site) {
+    route.head.push({ tag: 'link', attrs: { rel: 'canonical', href: new URL('/404', site).href } });
+  }
 }
 
-const url = !notFound && Astro.site && new URL(Astro.url.pathname, Astro.site).href;
-const home = Astro.site && new URL('/', Astro.site).href;
+const url = !notFound && site && new URL(Astro.url.pathname, site).href;
+const home = site?.href;
+const project = {
+  '@type': 'SoftwareApplication',
+  name: 'penciled',
+  alternateName: ['penciled.org', 'penciled.js', 'penciled JavaScript library'],
+  disambiguatingDescription: disambiguation,
+  url: home,
+};
 const structuredData = url &&
   home && [
     {
@@ -38,17 +51,32 @@ const structuredData = url &&
       inLanguage: 'en',
       ...(route.lastUpdated && { dateModified: route.lastUpdated.toISOString() }),
       author: { '@type': 'Person', name: 'Marcel Losso', url: 'https://github.com/marcellosso' },
-      about: { '@type': 'SoftwareApplication', name: 'penciled.js', url: home },
-      isPartOf: { '@type': 'WebSite', name: 'penciled.js', url: home },
+      about: project,
+      isPartOf: { '@type': 'WebSite', name: 'penciled.org', url: home },
     },
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'penciled.js', item: home },
+        { '@type': 'ListItem', position: 1, name: 'penciled.org', item: home },
         { '@type': 'ListItem', position: 2, name: data.title, item: url },
       ],
     },
+    ...(route.id === 'faq'
+      ? [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            url,
+            about: project,
+            mainEntity: faq.map(({ question, answer }) => ({
+              '@type': 'Question',
+              name: question,
+              acceptedAnswer: { '@type': 'Answer', text: answer },
+            })),
+          },
+        ]
+      : []),
   ];
 ---
 

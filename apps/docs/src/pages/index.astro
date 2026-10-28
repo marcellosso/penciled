@@ -9,29 +9,49 @@ import '../styles/custom.css';
 import '../styles/landing.css';
 import { Code } from '@astrojs/starlight/components';
 import Analytics from '@vercel/analytics/astro';
-import { faq } from '../faq.ts';
+import { disambiguation, homeQuestion, links } from '../faq.ts';
 import { scoped, skins } from '../skins.ts';
 
-const github = 'https://github.com/marcellosso/penciled';
-const npm = 'https://www.npmjs.com/package/penciled';
+const { github, npm, chrome, firefox, edge } = links;
 const stackblitz =
   'https://stackblitz.com/github/marcellosso/penciled/tree/main/examples/vanilla?file=main.js';
 
-const title = 'penciled.js: JavaScript highlights & notes library';
+const title = 'penciled.org: highlights & notes library and browser extension';
+// The X-is-Y line: one sentence that covers both products, for readers and for answer engines.
 const summary =
-  'penciled is a 15 kB open-source JavaScript library for persistent highlights and notes on any web page.';
-const description = `${summary} Framework-agnostic, no backend, never touches your DOM.`;
+  'penciled.org is an open-source JavaScript library and browser extension for persistent text highlights and notes (local, no account).';
+const description = `${summary} 15 kB, framework-agnostic, never touches your DOM.`;
 const canonical = Astro.site && new URL('/', Astro.site).href;
 const ogImage = Astro.site ? new URL('/og.png', Astro.site).href : '/og.png';
 const author = { '@type': 'Person', name: 'Marcel Losso', url: 'https://github.com/marcellosso' };
+// Several names, and a sentence that rules out the healthcare company at penciled.com, so the
+// two aren't merged into one entity.
+const alternateName = [
+  'penciled.org',
+  'penciled.js',
+  'penciled JavaScript library',
+  'penciled.org JavaScript highlight library',
+];
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
     {
+      '@type': 'WebSite',
+      '@id': canonical ? `${canonical}#website` : undefined,
+      name: 'penciled.org',
+      alternateName: ['penciled', 'penciled.js'],
+      url: canonical,
+      inLanguage: 'en',
+      description: summary,
+      disambiguatingDescription: disambiguation,
+    },
+    {
       '@type': 'SoftwareApplication',
+      '@id': canonical ? `${canonical}#library` : undefined,
       name: 'penciled',
-      alternateName: ['penciled.js', 'penciled JS library'],
+      alternateName,
       description,
+      disambiguatingDescription: disambiguation,
       ...(canonical && { url: canonical }),
       applicationCategory: 'DeveloperApplication',
       operatingSystem: 'Any (web browser)',
@@ -42,8 +62,24 @@ const structuredData = {
       sameAs: [github, npm],
     },
     {
+      '@type': 'SoftwareApplication',
+      name: 'penciled for the browser',
+      alternateName: ['penciled browser extension', 'penciled – Highlighter & Notes'],
+      description:
+        'A free, open-source browser extension for highlighting text and taking notes on any website. Highlights stay in the browser: no account, nothing is sent anywhere.',
+      disambiguatingDescription: disambiguation,
+      ...(canonical && { url: new URL('/extension/', canonical).href }),
+      applicationCategory: 'BrowserApplication',
+      operatingSystem: 'Chrome, Edge, Firefox',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      license: 'https://opensource.org/licenses/MIT',
+      author,
+      sameAs: [chrome, firefox, edge],
+    },
+    {
       '@type': 'SoftwareSourceCode',
       name: 'penciled',
+      alternateName,
       description,
       codeRepository: github,
       programmingLanguage: ['TypeScript', 'JavaScript'],
@@ -51,15 +87,17 @@ const structuredData = {
       license: 'https://opensource.org/licenses/MIT',
       author,
       keywords:
-        'text highlight, annotation, notes, CSS Custom Highlight API, JavaScript library, React',
+        'open source text highlighting javascript, CSS Custom Highlight API library, annotation, notes, browser extension, React',
     },
     {
       '@type': 'FAQPage',
-      mainEntity: faq.map(({ question, answer }) => ({
-        '@type': 'Question',
-        name: question,
-        acceptedAnswer: { '@type': 'Answer', text: answer },
-      })),
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: homeQuestion.question,
+          acceptedAnswer: { '@type': 'Answer', text: homeQuestion.answer },
+        },
+      ],
     },
   ],
 };
@@ -183,31 +221,37 @@ export function Post({ post }) {
     <main class="column">
       <section class="intro">
         <h1>
-          <span class="name">penciled.js: JavaScript highlights &amp; notes library</span>
+          <span class="name">penciled.org</span>
           Read with a pencil in hand.
         </h1>
-        <p class="facts">
-          penciled is a 15&nbsp;kB open-source JavaScript library for persistent highlights and
-          notes on any web page. No backend, and it never touches your DOM.
-        </p>
-        <div class="actions">
-          <div class="install">
-            <code><span aria-hidden="true">$</span> npm install penciled</code>
-            <button type="button" id="copy-install" aria-label="Copy install command">
-              <svg viewBox="0 0 24 24" aria-hidden="true"
-                ><rect x="8" y="8" width="13" height="13" rx="2.5"></rect><path
-                  d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"
-                ></path></svg
-              >
-            </button>
-          </div>
-          <a class="primary" href="/getting-started/">Read the docs <span aria-hidden="true">→</span></a>
+        <p class="facts">{summary}</p>
+        <div class="bands">
+          <section class="band" aria-labelledby="band-extension">
+            <h2 id="band-extension">Get the extension</h2>
+            <p>Highlight and take notes on any website. Free, and nothing leaves your browser.</p>
+            <div class="stores">
+              <a href={chrome}>Chrome</a>
+              <a href={firefox}>Firefox</a>
+              <a href={edge}>Edge</a>
+            </div>
+            <a class="quiet" href="/extension/">About the extension</a>
+          </section>
+          <section class="band" aria-labelledby="band-library">
+            <h2 id="band-library">Add it to your site</h2>
+            <p>15&nbsp;kB, framework-agnostic, and it never touches your DOM.</p>
+            <div class="install">
+              <code><span aria-hidden="true">$</span> npm install penciled</code>
+              <button type="button" id="copy-install" aria-label="Copy install command">
+                <svg viewBox="0 0 24 24" aria-hidden="true"
+                  ><rect x="8" y="8" width="13" height="13" rx="2.5"></rect><path
+                    d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"
+                  ></path></svg
+                >
+              </button>
+            </div>
+            <a class="primary" href="/getting-started/">Read the docs <span aria-hidden="true">→</span></a>
+          </section>
         </div>
-        <p class="links">
-          <a href={npm}>npm</a>
-          <a href="/compare/">Compare</a>
-          <a href="/extension/">Browser extension</a>
-        </p>
         <p class="support">
           <a class="quiet" href="/guides/browser-support/">Chrome/Edge 105+, Safari 17.2+, Firefox 140+</a>.
           Older browsers get a console warning, not a fallback.
@@ -344,46 +388,28 @@ export function Post({ post }) {
         </div>
       </section>
 
-      <section class="block" aria-labelledby="b-extension">
-        <h2 id="b-extension">For readers: the browser extension</h2>
+      <section class="block" aria-labelledby="b-question">
+        <h2 id="b-question">{homeQuestion.question}</h2>
+        <p>{homeQuestion.answer}</p>
         <p>
-          Not building a site? penciled for the browser lets you highlight and take notes on any
-          website, in Chrome, Edge and other Chromium browsers 123+ and Firefox 140+. It's built on
-          this library, free and open source, and nothing leaves your browser. Install it for{' '}
-          <a href="https://chromewebstore.google.com/detail/edpobhdkceoadekhpdagmnknocckaaje">Chrome</a>,{' '}
-          <a href="https://addons.mozilla.org/en-US/firefox/addon/penciled-highlighter/">Firefox</a> or{' '}
-          <a href="https://microsoftedge.microsoft.com/addons/detail/penciled-%E2%80%93-highlighter-/abhbgdlbgleahgeodcifnpecikbdciml">Edge</a>.
+          <a href="/faq/">More questions</a> · <a href="/getting-started/">Getting started</a>
         </p>
-        <p><a href="/extension/">Get the browser extension <span aria-hidden="true">→</span></a></p>
-      </section>
-
-      <section class="block faq" aria-labelledby="b-faq">
-        <h2 id="b-faq">Questions</h2>
-        {
-          faq.map(({ question, answer }) => (
-            <>
-              <h3>{question}</h3>
-              <p>
-                {answer
-                  .split(/(https:\/\/\S+\/)/)
-                  .map((part) => (part.startsWith('https://') ? <a href={part}>{part}</a> : part))}
-              </p>
-            </>
-          ))
-        }
       </section>
 
       <nav class="next" aria-label="Next steps">
         <a href="/getting-started/">Get started <span aria-hidden="true">→</span></a>
         <a href="/playground/">Playground</a>
         <a href="/reference/options/">API reference</a>
-        <a href="/compare/">Compare with other libraries</a>
       </nav>
     </main>
 
     <footer class="column foot">
       <span>MIT licensed</span>
       <a href={github}>GitHub</a>
+      <a href={npm}>npm</a>
+      <a href="/compare/">Compare</a>
+      <a href="/faq/">FAQ</a>
+      <span>Not affiliated with penciled.com.</span>
     </footer>
 
     <script>

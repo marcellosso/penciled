@@ -1,6 +1,6 @@
 # penciled for the browser
 
-A browser extension for highlighting text and taking notes on any web page, built on [penciled](../../packages/penciled). For readers: [penciled.org/extension](https://penciled.org/extension/). Highlights are saved in the browser (`chrome.storage.local`) and come back when you return to a page. Nothing is sent anywhere.
+A browser extension for highlighting text and taking notes on any web page, built on [penciled](../../packages/penciled). For readers: [www.penciled.org/extension](https://www.penciled.org/extension/). Highlights are saved in the browser (`chrome.storage.local`) and come back when you return to a page. Nothing is sent anywhere.
 
 ## Development
 
