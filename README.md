@@ -1,11 +1,13 @@
-# penciled.js
+# penciled.org, JavaScript highlights & notes library
 
 [![npm version](https://img.shields.io/npm/v/penciled)](https://www.npmjs.com/package/penciled)
 [![min+gzip size](https://img.shields.io/bundlejs/size/penciled?label=min%2Bgzip)](https://bundlejs.com/?q=penciled)
 [![CI](https://github.com/marcellosso/penciled/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/marcellosso/penciled/actions/workflows/ci.yml)
 [![license: MIT](https://img.shields.io/npm/l/penciled)](https://github.com/marcellosso/penciled/blob/main/LICENSE)
 
-penciled is a 15 kB open-source JavaScript library for persistent highlights and notes on any web page. Think **Sonner, for text annotations**.
+**penciled** (penciled.org, also called penciled.js) is a 15 kB open-source JavaScript library for persistent text highlights and notes on any web page, with a [browser extension](https://www.penciled.org/extension/) built on it. Highlights are painted with the CSS Custom Highlight API, so your DOM is never touched. Think **Sonner, for text annotations**.
+
+Not to be confused with Penciled, the healthcare company at penciled.com.
 
 **Browser support:** Chrome/Edge 105+, Safari 17.2+, Firefox 140+; no fallback on older browsers, `annotate()` only warns. [Details](https://www.penciled.org/guides/browser-support/)
 
@@ -94,7 +96,7 @@ Chrome and Edge 105+, Safari 17.2+ and Firefox 140+, on desktop and mobile. With
 
 ### What is penciled?
 
-penciled (penciled.js) is a 15 kB open-source JavaScript library that lets readers highlight text and write notes on any web page. Call `annotate('#article')` and readers get a floating toolbar and a note editor. Annotations are saved to `localStorage`, or to your own backend through a storage adapter. It's MIT licensed and published on npm as `penciled`.
+penciled (penciled.org, also called penciled.js) is a 15 kB open-source JavaScript library that lets readers highlight text and write notes on any web page. Call `annotate('#article')` and readers get a floating toolbar and a note editor. Annotations are saved to `localStorage`, or to your own backend through a storage adapter. It's MIT licensed and published on npm as `penciled`.
 
 ### Does penciled modify my page's DOM?
 
@@ -110,11 +112,15 @@ Yes. Pass a storage adapter with async `load()` and `save()` methods, and option
 
 ### How is penciled different from web-highlighter or Recogito?
 
-web-highlighter wraps each highlight in `<span>` elements and leaves the UI and storage to you. Recogito's Text Annotator is a larger framework built around the W3C Web Annotation model, with multi-user features, for research and collaborative annotation. penciled never changes your DOM, ships a toolbar, note editor and persistence, and is about 15 kB with the UI. In exchange it needs a browser with the CSS Custom Highlight API, while both of the others also work in older browsers. The comparison page at [https://www.penciled.org/compare/](https://www.penciled.org/compare/) covers them and three more.
+web-highlighter wraps each highlight in `<span>` elements and leaves the UI and storage to you. Recogito's Text Annotator is a larger framework built around the W3C Web Annotation model, with multi-user features, for research and collaborative annotation. penciled never changes your DOM, ships a toolbar, note editor and persistence, and is about 15 kB with the UI. In exchange it needs a browser with the CSS Custom Highlight API, while both of the others also work in older browsers. The comparison page at [https://www.penciled.org/compare/](https://www.penciled.org/compare/) covers them, three more libraries and Hypothesis.
+
+### Is there a browser extension?
+
+Yes. penciled for the browser lets readers highlight text and take notes on any website, in Chrome, Edge and other Chromium browsers 123+ and Firefox 140+. It's free, open source and built on this library. Highlights stay in the browser, with no account, and nothing is sent anywhere. See [https://www.penciled.org/extension/](https://www.penciled.org/extension/)
 
 ### Is this penciled.com, the healthcare company?
 
-No. penciled.js is an open-source JavaScript library, at penciled.org. It is not related to Penciled, the healthcare company at penciled.com.
+No. penciled.org is an open-source JavaScript highlights & notes library and browser extension, at [www.penciled.org](https://www.penciled.org). It is not related to Penciled, the healthcare company at penciled.com.
 
 
 ## Development

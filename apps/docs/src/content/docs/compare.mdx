@@ -1,13 +1,37 @@
 ---
 title: Compare penciled with other highlight libraries
-metaTitle: 'penciled vs mark.js, rangy, web-highlighter, Recogito and Annotator.js'
-lastUpdated: 2026-10-22
-description: Compare JavaScript libraries that highlight text and annotate web pages, by approach, DOM changes, persistence, bundle size, maintenance and browser support.
+metaTitle: 'penciled.org vs Hypothesis, mark.js, web-highlighter and more'
+lastUpdated: 2026-10-28
+description: How penciled.org, the open-source JavaScript highlights & notes library, compares with Hypothesis, mark.js, rangy, web-highlighter, Recogito and Annotator.js.
 ---
 
-**penciled** (penciled.js) is a 15 kB open-source JavaScript library for persistent text highlights and notes. It paints highlights with the CSS Custom Highlight API instead of wrapping text in elements, and it comes with a toolbar, a note editor and saving to `localStorage` or your own backend. This page compares it with five other libraries that highlight or annotate text: [mark.js](https://markjs.io/), [rangy](https://github.com/timdown/rangy), [web-highlighter](https://github.com/alienzhou/web-highlighter), [@recogito/text-annotator](https://github.com/recogito/text-annotator-js) and [Annotator.js](https://github.com/openannotation/annotator). They solve different problems, and for some jobs one of them is the better choice.
+**penciled.org** is an open-source JavaScript library and browser extension for persistent text highlights and notes. The library, published on npm as `penciled` and also called penciled.js, is 15 kB with its UI. It's a CSS Custom Highlight API library: it paints highlights without wrapping text in elements, and it comes with a toolbar, a note editor and saving to `localStorage` or your own backend. This page compares it with [Hypothesis](https://web.hypothes.is/) and five JavaScript libraries that highlight or annotate text: [mark.js](https://markjs.io/), [rangy](https://github.com/timdown/rangy), [web-highlighter](https://github.com/alienzhou/web-highlighter), [@recogito/text-annotator](https://github.com/recogito/text-annotator-js) and [Annotator.js](https://github.com/openannotation/annotator). They solve different problems, and for some jobs one of them is the better choice.
 
-## How do they compare at a glance?
+## What is the best open source text highlighting JavaScript library?
+
+It depends on the job. For readers who highlight and take notes on your pages, penciled.org is the only one here that ships the toolbar, the note editor and persistence together and never modifies your DOM, in 15 kB. For highlighting search terms, mark.js. For a highlighter that must run in old browsers, web-highlighter. For collaborative annotation on the W3C model, @recogito/text-annotator. [Which one should I use?](#which-one-should-i-use) has the full list.
+
+## Is penciled.org an alternative to Hypothesis?
+
+Partly. Both let you highlight and annotate web pages, from a browser extension or from a script on your own site, but Hypothesis is a social annotation service and penciled.org is a local, private one. Hypothesis needs an account, stores annotations on its servers (or a server you run), and is built for sharing: public annotations, groups, replies and PDFs. penciled.org needs no account and no server. The [browser extension](/extension/) keeps highlights in your browser, and the penciled.org JavaScript highlight library saves to `localStorage` unless you plug in your own backend.
+
+| | penciled.org | Hypothesis |
+|---|---|---|
+| What it is | JavaScript library and browser extension | Annotation service, with a browser extension and an embeddable client |
+| Account | None | Required to annotate |
+| Where annotations live | The reader's browser, or your backend through a [storage adapter](/recipes/rest-storage/) | Hypothesis's servers, or a self-hosted server |
+| Sharing and discussion | No: highlights and notes are private | Public annotations, groups and threaded replies |
+| PDFs | No | Yes |
+| Changes to the page | None: painted with the CSS Custom Highlight API | Wraps highlighted text in elements |
+| Customizing on your site | Full: options, CSS custom properties, custom actions or [headless](/reference/headless/) | Limited: it brings its own sidebar |
+
+Choose Hypothesis when readers need to discuss a text with each other, or when you annotate PDFs. Choose penciled.org when readers keep their own highlights and notes, when you want the UI to match your site, or when nothing may leave the browser. Hypothesis isn't in the table below because it's a hosted service, not a library you bundle.
+
+## Is there a CSS Custom Highlight API library for highlights and notes?
+
+Yes: penciled.org. The [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API) lets the browser paint a range of text without adding elements, and penciled uses it for every highlight, with [no fallback](/guides/browser-support/#unsupported-browsers) that wraps text. Of the other libraries here, only @recogito/text-annotator has an optional renderer that uses it; by default it draws boxes in an overlay layer. mark.js, rangy, web-highlighter and Annotator.js wrap text in `<mark>` or `<span>` elements.
+
+## How do the libraries compare at a glance?
 
 Sizes, releases and downloads were measured on 22 October 2026. See [how these numbers were measured](#how-were-these-numbers-measured).
 
@@ -15,7 +39,7 @@ Sizes, releases and downloads were measured on 22 October 2026. See [how these n
 
 | Library | Approach | Mutates DOM? | Persistence | Size (min+gzip) | Last release | Weekly npm downloads | License | Old-browser support | Best for |
 |---|---|---|---|---|---|---|---|---|---|
-| **penciled** | Highlight and note UI plus engine, painted with the CSS Custom Highlight API | No | Built in: `localStorage` or your adapter | 15.3 kB (6.4 kB headless) + 2.6 kB CSS | 0.5.1, 2026-10-22 | 643 | MIT | No: `annotate()` only warns | Reader highlights and notes |
+| **penciled.org** | Highlight and note UI plus engine, painted with the CSS Custom Highlight API | No | Built in: `localStorage` or your adapter | 15.3 kB (6.4 kB headless) + 2.6 kB CSS | 0.5.1, 2026-10-22 | 643 | MIT | No: `annotate()` only warns | Reader highlights and notes |
 | **mark.js** | Search-term highlighter | Yes, `<mark>` | None | 6.2 kB | 8.11.1, 2018-01-11 | 1,936,357 | MIT | Yes | Highlighting search terms |
 | **rangy** | Range and Selection toolkit with a Highlighter module | Yes, `<span>` | Serializes offsets; you store them | 22.7 kB¹ | 1.3.2, 2024-11-02 | 36,774 | MIT | Yes | Low-level selection work |
 | **web-highlighter** | Headless highlighting engine | Yes, `<span>` | Serializes DOM paths; you store them | 9.4 kB | 0.8.0, 2026-08-19 | 2,051 | MIT | Yes, IE 11+ | Custom highlighters for old browsers |
@@ -34,7 +58,7 @@ penciled needs Chrome/Edge 105+, Safari 17.2+ or Firefox 140+, with no fallback 
 
 Wrapping highlighted text in `<mark>` or `<span>` elements works everywhere, but it changes the page underneath your code. Frameworks like React and Vue expect to own their markup, so a re-render can drop the highlights or fight with them, and highlights added before hydration can cause mismatches. Wrapping also splits text nodes and adds elements, which can break CSS selectors like `p > a` and scripts that walk the content.
 
-The CSS Custom Highlight API lets the browser paint a range of text without any new elements. penciled relies on it entirely, and there is [no fallback](/guides/browser-support/#unsupported-browsers) that wraps text. Recogito takes a middle path: its default renderer leaves your text alone but draws highlight boxes in a layer it adds to the container.
+The CSS Custom Highlight API lets the browser paint a range of text without any new elements, which is why penciled.org relies on it entirely. Recogito takes a middle path: its default renderer leaves your text alone but draws highlight boxes in a layer it adds to the container.
 
 ## Where does each alternative win?
 
@@ -42,11 +66,11 @@ The CSS Custom Highlight API lets the browser paint a range of text without any 
 - **rangy** is a general Range and Selection toolkit: saving and restoring selections, text ranges, serialization and class application. If you need those primitives, or old browsers, it's broader than penciled, which only exposes what annotation needs.
 - **web-highlighter** works back to IE 11 and is smaller than penciled. It's a headless engine with hooks to customize how highlights are serialized and restored, so you control everything, including the UI and storage you'll have to build.
 - **@recogito/text-annotator** is the most capable annotation framework here. It's built on the W3C Web Annotation model, supports multiple users, has React bindings and a sibling PDF annotator, and is used in research and digital humanities projects. If you need collaborative annotation or W3C data end to end, start there.
-- **Annotator.js** has a plugin system and a defined storage API, and the [Hypothesis](https://web.hypothes.is/) annotation tool was originally built on it. It hasn't had a release since 2015 and depends on jQuery 1.11, so it mostly matters if you already run it.
+- **Annotator.js** has a plugin system and a defined storage API, and Hypothesis was originally built on it. It hasn't had a release since 2015 and depends on jQuery 1.11, so it mostly matters if you already run it.
 
 penciled is also new: it's below 1.0, so its API may still change between minor versions, and it has far fewer users than mark.js or rangy.
 
-## Where does penciled win?
+## Where does penciled.org win?
 
 - **It never touches your DOM.** Highlights are painted by the browser, so React, Vue, Svelte and server-rendered pages re-render without losing them, and your markup, selectors and event listeners keep working. [Try it on the home page](/#b-dom).
 - **It's a complete feature, not a toolkit.** `annotate('#article')` gives readers a floating toolbar, colors, a note editor, a hover preview, light and dark themes, keyboard shortcuts and screen-reader announcements. If you want your own UI, [`penciled/headless`](/reference/headless/) is the engine alone, at 6.4 kB.
@@ -60,6 +84,8 @@ penciled is also new: it's below 1.0, so its API may still change between minor 
 - To let **readers highlight and take notes** in modern browsers, without building the UI or storage yourself: penciled.
 - To build **your own highlighter** that must work in **old browsers**: web-highlighter, or rangy for lower-level control.
 - For **collaborative or research annotation** on the W3C model: @recogito/text-annotator.
+- For **public or group annotation** of web pages and PDFs, as a service: Hypothesis.
+- For **private highlights on any website**, as a reader: the [penciled.org browser extension](/extension/).
 - For an **existing Annotator.js** deployment: keep it, or plan a migration; it isn't maintained.
 
 ## How were these numbers measured?

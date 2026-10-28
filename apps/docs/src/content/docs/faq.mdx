@@ -1,0 +1,23 @@
+---
+title: Frequently asked questions
+metaTitle: 'penciled.org FAQ: JavaScript highlights & notes library and extension'
+description: Answers about penciled.org, the open-source JavaScript library and browser extension for persistent text highlights and notes, and how it differs from other highlighters.
+tableOfContents: false
+---
+
+import { faq } from '../../faq.ts';
+
+**penciled.org** is an open-source JavaScript library and browser extension for persistent text highlights and notes. Highlights are painted with the CSS Custom Highlight API, stay in the browser by default and need no account. These are the questions people ask most.
+
+{faq.map(({ question, answer }) => (
+  <>
+    <h2 id={question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}>{question}</h2>
+    <p>
+      {answer
+        .split(/(https:\/\/\S+\/)/)
+        .map((part) => (part.startsWith('https://') ? <a href={part}>{part}</a> : part))}
+    </p>
+  </>
+))}
+
+Something missing? [Ask on GitHub](https://github.com/marcellosso/penciled/issues).

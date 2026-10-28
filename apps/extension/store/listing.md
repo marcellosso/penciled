@@ -10,9 +10,9 @@ Screenshots are in `screenshots/` (1280×800), and the Chrome Web Store's promo 
 - **Summary:** Highlight text and take notes on any website. Your highlights come back when you return. Nothing leaves your browser. (from the manifest, under 132 characters)
 - **Category:** Productivity → Tools (Chrome) · Productivity (Edge) · Other (Firefox)
 - **Language:** English
-- **Homepage:** https://penciled.org/extension/
+- **Homepage:** https://www.penciled.org/extension/
 - **Support:** https://github.com/marcellosso/penciled/issues
-- **Privacy policy:** https://penciled.org/extension/privacy/
+- **Privacy policy:** https://www.penciled.org/extension/privacy/
 
 ## Description
 
@@ -34,7 +34,7 @@ Highlights never change the page itself. They're drawn by the browser, so pages 
 
 Not supported yet: text inside frames (such as embedded posts), PDFs, and text fields. Highlights don't sync between computers; use export and import to move them.
 
-Built on penciled, the open-source text annotation library: https://penciled.org
+Built on penciled, the open-source text annotation library: https://www.penciled.org
 ```
 
 ## Privacy practices (Chrome)

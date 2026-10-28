@@ -3,7 +3,5 @@
   "framework": "astro",
   "buildCommand": "cd ../.. && pnpm docs:build",
   "outputDirectory": "dist",
-  "redirects": [
-    { "source": "/sitemap.xml", "destination": "/sitemap-index.xml", "statusCode": 301 }
-  ]
+  "rewrites": [{ "source": "/sitemap.xml", "destination": "/sitemap-index.xml" }]
 }
