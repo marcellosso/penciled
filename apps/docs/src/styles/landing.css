@@ -186,7 +186,7 @@ code {
   flex-wrap: wrap;
   gap: 0.375rem;
 }
-.stores a {
+.store {
   padding: 0.45rem 0.85rem;
   color: var(--pd-bg);
   font-size: 0.875rem;
@@ -196,7 +196,7 @@ code {
   border-radius: 0.5rem;
   transition: opacity 120ms ease;
 }
-.stores a:hover {
+.store:hover {
   opacity: 0.85;
 }
 .install {
