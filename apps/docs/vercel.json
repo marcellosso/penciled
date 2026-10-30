@@ -3,5 +3,12 @@
   "framework": "astro",
   "buildCommand": "cd ../.. && pnpm docs:build",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/sitemap.xml", "destination": "/sitemap-index.xml" }]
+  "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/sitemap-index.xml" },
+    {
+      "source": "/ingest/static/:path*",
+      "destination": "https://us-assets.i.posthog.com/static/:path*"
+    },
+    { "source": "/ingest/:path*", "destination": "https://us.i.posthog.com/:path*" }
+  ]
 }

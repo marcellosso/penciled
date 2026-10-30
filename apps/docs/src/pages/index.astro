@@ -8,7 +8,6 @@ import '../styles/tokens.css';
 import '../styles/custom.css';
 import '../styles/landing.css';
 import { Code } from '@astrojs/starlight/components';
-import Analytics from '@vercel/analytics/astro';
 import { disambiguation, homeQuestion, links } from '../faq.ts';
 import { scoped, skins } from '../skins.ts';
 
@@ -195,7 +194,6 @@ export function Post({ post }) {
         document.documentElement.dataset.theme = theme;
       })();
     </script>
-    <Analytics />
   </head>
   <body>
     <header class="top">
@@ -249,7 +247,7 @@ export function Post({ post }) {
                 >
               </button>
             </div>
-            <a class="primary" href="/getting-started/">Read the docs <span aria-hidden="true">→</span></a>
+            <a class="primary" href="/getting-started/" data-ph-event="docs_cta_clicked">Read the docs <span aria-hidden="true">→</span></a>
           </section>
         </div>
         <p class="support">
@@ -397,7 +395,7 @@ export function Post({ post }) {
       </section>
 
       <nav class="next" aria-label="Next steps">
-        <a href="/getting-started/">Get started <span aria-hidden="true">→</span></a>
+        <a href="/getting-started/" data-ph-event="docs_cta_clicked">Get started <span aria-hidden="true">→</span></a>
         <a href="/playground/">Playground</a>
         <a href="/reference/options/">API reference</a>
       </nav>
@@ -413,6 +411,7 @@ export function Post({ post }) {
     </footer>
 
     <script>
+      import '../scripts/analytics.ts';
       import '../scripts/landing.ts';
     </script>
   </body>
