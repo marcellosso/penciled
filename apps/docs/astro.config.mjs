@@ -11,6 +11,23 @@ const ogImage = new URL('/og.png', site).href;
 
 export default defineConfig({
   site,
+  // In production, vercel.json proxies /ingest to PostHog; this does the same for `astro dev`.
+  vite: {
+    server: {
+      proxy: {
+        '/ingest/static': {
+          target: 'https://us-assets.i.posthog.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/ingest/, ''),
+        },
+        '/ingest': {
+          target: 'https://us.i.posthog.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/ingest/, ''),
+        },
+      },
+    },
+  },
   integrations: [
     starlight({
       title: 'penciled',

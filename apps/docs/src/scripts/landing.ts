@@ -7,6 +7,7 @@ import {
   type Annotator,
   annotate,
 } from 'penciled';
+import posthog from 'posthog-js';
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -34,11 +35,15 @@ function find(container: Element, text: string): Range | undefined {
 
 type Seed = AnnotationInit & { text: string };
 
+let seeding = false;
+
 function seed(instance: Annotator, seeds: Seed[]) {
+  seeding = true;
   for (const { text, ...init } of seeds) {
     const range = find(instance.container, text);
     if (range) instance.create(range, init);
   }
+  seeding = false;
 }
 
 /** An example that starts from `seeds` on every visit. */
@@ -103,6 +108,14 @@ const count = () => {
   }
 };
 for (const event of ['load', 'create', 'delete'] as const) demo.on(event, count);
+
+// The visitor's first highlight in the demo, once per page view: the site's activation moment.
+let tried = false;
+demo.on('create', (annotation) => {
+  if (seeding || tried) return;
+  tried = true;
+  posthog.capture('demo_highlight_created', { color: annotation.color });
+});
 
 // Colors.
 example(

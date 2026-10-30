@@ -1,8 +1,6 @@
 ---
-// Starlight's head with descriptive titles and structured data, plus Vercel Web Analytics
-// (cookieless, so no consent banner).
+// Starlight's head with descriptive titles and structured data, plus PostHog analytics.
 import Default from '@astrojs/starlight/components/Head.astro';
-import Analytics from '@vercel/analytics/astro';
 import { disambiguation, faq } from '../faq.ts';
 
 const route = Astro.locals.starlightRoute;
@@ -82,4 +80,6 @@ const structuredData = url &&
 
 <Default />
 {structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
-<Analytics />
+<script>
+  import '../scripts/analytics.ts';
+</script>
