@@ -5,7 +5,7 @@ penciled.org (the landing page and the docs) reports to PostHog: project **penci
 - **Automatic events:** `$pageview` (also on client-side history changes), `$pageleave` and `$autocapture`. Session recording is off.
 - **Super property:** every event carries `product: "penciled"`.
 - **Persons:** anonymous visitors don't create person profiles (`person_profiles: 'identified_only'`).
-- **Proxy:** events go to `/ingest`, which `vercel.json` rewrites to `us.i.posthog.com` (and `/ingest/static` to `us-assets.i.posthog.com`), so ad blockers don't drop them. `astro dev` proxies `/ingest` the same way.
+- **Proxy:** events go to `/ingest`, which `vercel.json` rewrites to `us.i.posthog.com` (and `/ingest/static` to `us-assets.i.posthog.com`), so ad blockers don't drop them. `astro dev` proxies `/ingest` the same way. The rewrites use `(.*)`, not `:path*`: posthog-js calls paths with a trailing slash (`/e/`, `/i/v0/e/`, `/flags/`), and Vercel compiles `:path*` to a pattern that doesn't match one, so those requests fell through to the site's 404 page.
 
 ## Configuration
 
