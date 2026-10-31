@@ -1,0 +1,57 @@
+---
+title: Alternatives to Weava, Glasp, Liner, Diigo, Memex, Hypothesis and Web Highlights
+metaTitle: 'Highlighter extension alternatives: Weava, Glasp, Liner, Diigo, Memex, Hypothesis, Web Highlights'
+description: How the free, open-source penciled.org highlighter extension compares with Weava, Glasp, Liner, Diigo, Memex, Hypothesis and Web Highlights, and when another tool is the better choice.
+lastUpdated: 2026-10-31
+tableOfContents: false
+---
+
+import FaqList from '../../components/FaqList.astro';
+import { alternativesFaq, checked } from '../../alternatives.ts';
+
+**penciled for the browser**, the penciled.org highlighter extension, is a free, open-source (MIT) extension for Chrome, Edge and Firefox that saves highlights and notes on any web page, locally, with no account. This page compares it with other web highlighter extensions: Weava, Glasp, Liner, Diigo, Memex, Hypothesis and Web Highlights. They make different trade-offs, and for many readers one of them is the better choice. To compare JavaScript libraries for your own site instead, see [Compare with other libraries](/compare/).
+
+## How do the highlighter extensions compare?
+
+Prices and plan limits are quoted only from each vendor's own page, checked on {checked}. Where a figure couldn't be read on the vendor's page, the cell says **see vendor**. Plans change, so check the vendor's page before deciding.
+
+<div class="compare-table">
+
+| Tool | Free plan and price (from the vendor's page) | Where highlights are kept | Source |
+|---|---|---|---|
+| **penciled.org extension** | Free, no paid plan. No limit on highlights or storage. | Only in your browser; no account, no sync | [Privacy statement](/extension/privacy/) |
+| **Weava** | Free: unlimited highlights and notes, 100 MB storage, sync with unlimited devices. Premium: see vendor (the page lists both $3.99/month and $7.99/month). | Synced to your Weava account | [weavatools.com/premium](https://www.weavatools.com/premium/), checked on {checked} |
+| **Glasp** | Free: unlimited public highlights; highlights are public by default. Pro: $12.50/month billed yearly ($150/year). | Your Glasp account | [glasp.co/pricing](https://glasp.co/pricing), checked on {checked} |
+| **Liner** | Free: $0 (AI search features). Pro: $14.99/month billed yearly, or $17.99 monthly. Highlighter limits: see vendor. | See vendor | [liner.com/pricing](https://liner.com/pricing), checked on {checked} |
+| **Diigo** | See vendor | See vendor | [diigo.com/premium](https://www.diigo.com/premium) |
+| **Memex** | See vendor | See vendor | [memex.garden](https://memex.garden/) |
+| **Hypothesis** | Free plan with core annotation; the pricing page lists paid plans for schools, per student. | Hypothesis's servers, or a self-hosted server | [web.hypothes.is/pricing-page](https://web.hypothes.is/pricing-page/), checked on {checked} |
+| **Web Highlights** | Free: unlimited highlights, bookmarks, notes and tags. Cloud sync and the web app: Premium or Ultimate, prices see vendor. | In the extension; in the cloud with a paid plan | [web-highlights.com/pricing](https://web-highlights.com/pricing), checked on {checked} |
+
+</div>
+
+<FaqList items={alternativesFaq} />
+
+## When is another tool the better choice?
+
+penciled for the browser does one thing: private highlights and notes on web pages, in one browser. Pick something else when you need:
+
+- **PDFs.** penciled doesn't highlight PDFs. Hypothesis, Glasp and Web Highlights work with PDFs.
+- **Cross-device sync.** penciled's highlights stay in the browser you made them in; you can move them with a backup file, but they don't sync. Weava syncs on its free plan, and Web Highlights with a paid plan.
+- **Research projects and collaboration.** If you organize sources in shared folders, a research tool fits better: Weava's plans list folders, sub-folders and collaboration.
+- **Social reading.** To share highlights, follow other readers or discuss a text in public or in groups, use Glasp or Hypothesis.
+- **AI answers and summaries.** penciled has no AI features; Liner and Glasp do.
+
+penciled is not a read-later app or a Pocket replacement: it doesn't save copies of pages, only your highlights and notes on them.
+
+## Where does the penciled.org extension win?
+
+- **Nothing leaves your browser.** No account, no servers, no analytics, and the extension makes no network requests. See the [privacy statement](/extension/privacy/).
+- **Free and open source.** MIT licensed, with no paid plan and no limit on highlights. Anyone can [read the source](https://github.com/marcellosso/penciled/tree/main/apps/extension).
+- **Pages stay as they are.** Highlights are painted by the browser with the CSS Custom Highlight API instead of wrapping text in elements, so the page's own markup and scripts aren't affected.
+- **It doesn't guess.** When a page changed so much that a highlight can't be placed with confidence, it's listed as not found instead of being put on the wrong words.
+- **Markdown export.** The notes page exports a `.md` file you can open in Obsidian, Logseq or any notes app. It's a file, not an integration or sync.
+
+[Get the penciled.org highlighter extension](/extension/) for Chrome, Edge or Firefox.
+
+Spotted something out of date or wrong? [Open an issue](https://github.com/marcellosso/penciled/issues) and it'll be fixed.

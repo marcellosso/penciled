@@ -53,7 +53,10 @@ export default defineConfig({
           ],
         }),
       ],
-      components: { Head: './src/components/Head.astro' },
+      components: {
+        Head: './src/components/Head.astro',
+        Footer: './src/components/Footer.astro',
+      },
       head: [
         { tag: 'link', attrs: { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' } },
         { tag: 'meta', attrs: { property: 'og:image', content: ogImage } },
@@ -146,6 +149,7 @@ export default defineConfig({
           items: [
             { label: 'Theming and customization', slug: 'guides/theming' },
             { label: 'Anchoring and limitations', slug: 'guides/anchoring' },
+            { label: 'Highlight text without spans', slug: 'guides/highlight-without-spans' },
             { label: 'Browser support', slug: 'guides/browser-support' },
           ],
         },
@@ -164,6 +168,7 @@ export default defineConfig({
           items: [
             { label: 'Overview', slug: 'extension' },
             { label: 'Privacy', slug: 'extension/privacy' },
+            { label: 'Alternatives', slug: 'alternatives' },
           ],
         },
         {

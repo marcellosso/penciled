@@ -56,6 +56,26 @@ export const faq: Faq[] = [
       "Yes. penciled for the browser lets readers highlight text and take notes on any website, in Chrome, Edge and other Chromium browsers 123+ and Firefox 140+. It's free, open source and built on this library. Highlights stay in the browser, with no account, and nothing is sent anywhere. See https://www.penciled.org/extension/",
   },
   {
+    question: "Do my extension highlights survive when a page's URL changes?",
+    answer:
+      "Not automatically. The extension saves highlights per page address, ignoring the #fragment, a leading www., a trailing slash and common tracking parameters such as utm_source. If a page moves to a new address, or the same article is reachable at two different addresses, highlights made at one address don't show at the other. In the JavaScript library, annotations are stored under the page's path by default; set documentId to keep them when URLs change.",
+  },
+  {
+    question: 'Does the extension sync highlights between devices?',
+    answer:
+      'No. Highlights stay in the browser you made them in, with no account and no cloud. Only your settings sync, through your browser account. To move highlights to another browser, export a backup from the notes page and import it there.',
+  },
+  {
+    question: 'Can penciled highlight PDFs?',
+    answer:
+      'No. The extension and the library highlight text on web pages, not PDFs. For PDFs, a tool like Hypothesis is a better fit; see https://www.penciled.org/alternatives/',
+  },
+  {
+    question: 'Can I export my highlights to Markdown for Obsidian or Logseq?',
+    answer:
+      "Yes, as a file. Export as Markdown on the extension's notes page downloads a .md file with each highlight quoted with its note, which you can open in Obsidian, Logseq or any notes app. There's no integration or sync with them: each export is a one-off copy.",
+  },
+  {
     question: 'Is this penciled.com, the healthcare company?',
     answer:
       'No. penciled.org is an open-source JavaScript highlights & notes library and browser extension, at https://www.penciled.org/. It is not related to Penciled, the healthcare company at penciled.com.',

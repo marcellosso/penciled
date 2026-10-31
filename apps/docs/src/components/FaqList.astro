@@ -1,0 +1,29 @@
+---
+// Renders questions as h2 headings with their answers, turning the site's own URLs into links. The
+// same data feeds the page's FAQPage structured data in Head.astro, so the two always match.
+import type { Faq } from '../faq.ts';
+
+interface Props {
+  items: Faq[];
+}
+
+const { items } = Astro.props;
+const slug = (question: string) =>
+  question
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+---
+
+{
+  items.map(({ question, answer }) => (
+    <>
+      <h2 id={slug(question)}>{question}</h2>
+      <p>
+        {answer
+          .split(/(https:\/\/\S+\/)/)
+          .map((part) => (part.startsWith('https://') ? <a href={part}>{part}</a> : part))}
+      </p>
+    </>
+  ))
+}

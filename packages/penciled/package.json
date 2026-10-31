@@ -27,7 +27,12 @@
     "highlighter",
     "text-highlight",
     "web-annotation",
-    "react"
+    "react",
+    "text-annotation",
+    "web-highlighter",
+    "react-highlight",
+    "nextjs",
+    "custom-highlight-api"
   ],
   "type": "module",
   "sideEffects": [
