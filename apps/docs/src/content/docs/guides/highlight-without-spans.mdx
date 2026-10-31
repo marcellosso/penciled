@@ -1,0 +1,69 @@
+---
+title: How to highlight HTML text without wrapping it in spans
+metaTitle: 'How to highlight HTML text without wrapping it in spans (CSS Custom Highlight API)'
+description: Highlight text in HTML without <span> or <mark> elements using the CSS Custom Highlight API, make the highlights persist across reloads, and check browser support.
+lastUpdated: 2026-10-31
+---
+
+To highlight text without wrapping it in `<span>` or `<mark>` elements, create a `Range` over the text, add it to a `Highlight`, register that in `CSS.highlights`, and style it with the `::highlight()` pseudo-element. This is the [CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API): the browser paints the range the way it paints a text selection, and the DOM is left exactly as it was. This guide shows the API on its own first, then how to make highlights persist, which is where penciled.org helps.
+
+## How do I highlight HTML text without wrapping it in tags?
+
+Use a `Range` and the CSS Custom Highlight API. This works without any library:
+
+```html
+<p id="intro">Highlights are painted by the browser, not inserted into the page.</p>
+
+<style>
+  ::highlight(note) {
+    background-color: #fde047;
+    color: black;
+  }
+</style>
+
+<script>
+  const text = document.querySelector('#intro').firstChild;
+  const start = text.data.indexOf('painted by the browser');
+
+  const range = new Range();
+  range.setStart(text, start);
+  range.setEnd(text, start + 'painted by the browser'.length);
+
+  // A Highlight is a set of ranges; the name is what ::highlight() matches.
+  CSS.highlights.set('note', new Highlight(range));
+</script>
+```
+
+The paragraph still has a single text node afterwards, so frameworks can re-render it, and selectors, `textContent` and copy-and-paste see the original markup. To highlight what the reader selected, use `getSelection().getRangeAt(0)` instead of building the range yourself. To remove a highlight, delete the range from its `Highlight`, or call `CSS.highlights.delete('note')`.
+
+A few things to know:
+
+- Only a few properties apply in `::highlight()`: `color`, `background-color`, `text-decoration`, `text-shadow` and a few others. Padding, borders and rounded corners aren't possible.
+- Ranges are live: if the DOM changes under them, they collapse or move. Rebuild them after content changes.
+- Clicking a highlight doesn't fire an event on it, because there's no element. To make highlights clickable, compare the click position with each range, for example with `caretPositionFromPoint()` or `range.getClientRects()`.
+
+## How do I make CSS Custom Highlight API highlights persist across reloads?
+
+Save a description of the text, not the `Range`: a `Range` points at DOM nodes, which don't exist after a reload. The simplest description is the quoted text with a little context around it, plus its character position. On the next load, search the page's text for that quote, build a new `Range` over it and add it to the highlight again.
+
+Doing that reliably is most of the work. The text can change between visits, the same phrase can appear several times, and whitespace differs between markup and rendered text. penciled.org is a 15 kB library that does this part for you: it stores each highlight's quote, context and position, finds it again on every load, and [refuses to guess](/guides/anchoring/) when the text changed too much. It paints with the CSS Custom Highlight API, so the DOM is never touched, and comes with a toolbar and note editor:
+
+```ts
+import { annotate } from 'penciled';
+import 'penciled/styles.css';
+
+// Readers select text to highlight it; highlights are saved to localStorage and come back on reload.
+annotate('#article');
+```
+
+To save highlights to your own database instead of `localStorage`, pass a [storage adapter](/recipes/rest-storage/). For your own UI, [`penciled/headless`](/reference/headless/) is the engine alone, at about 6 kB.
+
+## What browsers support the CSS Custom Highlight API?
+
+Every current major browser: Chrome and Edge 105+, Safari 17.2+ and Firefox 140+, on desktop and mobile. Older browsers don't support it, and there is no way to polyfill it without wrapping text in elements. Check for it before using it:
+
+```ts
+const supported = typeof CSS !== 'undefined' && 'highlights' in CSS;
+```
+
+penciled has no fallback that wraps text: in a browser without the API, `annotate()` warns and does nothing. See [Browser support](/guides/browser-support/) for details.

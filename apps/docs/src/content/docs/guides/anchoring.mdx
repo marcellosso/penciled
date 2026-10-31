@@ -4,9 +4,13 @@ metaTitle: 'How text highlights are anchored, and their limitations'
 description: How penciled anchors text highlights and annotations so they survive content changes, when it orphans them instead, and its limitations.
 ---
 
-An annotation is only useful if it comes back on the right words. Pages change between visits: a typo is fixed, a paragraph is added, a framework renders slightly different markup. **Anchoring** is how penciled finds the annotated text again, and its one rule is that it never guesses. If it can't be confident, it doesn't highlight anything.
+**Anchoring** is how a text highlight is saved so it can be found again later: instead of pointing at DOM nodes, penciled.org stores the highlighted text, the text around it and its position, and searches the page for them on every load. Pages change between visits: a typo is fixed, a paragraph is added, a framework renders slightly different markup. Anchoring's one rule is that it never guesses. If penciled can't be confident, it doesn't highlight anything.
 
-## What is stored
+## How do I persist a highlighted selection across page reloads?
+
+Save what the selection says, not where it is in the DOM, and search for it again when the page loads. penciled does this for you: `annotate()` saves each highlight to `localStorage` (or your [own storage](/recipes/rest-storage/)) and restores it on the next visit.
+
+### What is stored
 
 When a reader highlights a passage, penciled records:
 
@@ -16,7 +20,7 @@ When a reader highlights a passage, penciled records:
 
 All of these are measured in the container's text with every run of whitespace collapsed to one space. Re-indenting your HTML or reformatting it doesn't move anything. Text inside `script`, `style`, `template` and `noscript` elements is ignored.
 
-## How an annotation is restored
+### How an annotation is restored
 
 When the page loads, and whenever the content changes, each annotation goes through these steps:
 
@@ -27,7 +31,28 @@ When the page loads, and whenever the content changes, each annotation goes thro
 
 When no candidate passes, the annotation is **orphaned**.
 
-## Orphans
+## How do I serialize a Range so it survives DOM changes?
+
+Store the text of the range and its context rather than node paths and offsets. A path like "the third text node of the second `<p>`" breaks as soon as a framework re-renders, an ad is inserted or a paragraph is added; the quoted text usually doesn't. With [`penciled/headless`](/reference/headless/), `create()` serializes a `Range` into the selectors above, and `getRange()` turns them back into a `Range` against the current DOM:
+
+```ts
+import { annotate } from 'penciled/headless';
+
+const penciled = annotate('#article');
+await penciled.ready;
+
+// Serialize: a plain JSON object with quote, prefix, suffix, start and end.
+const annotation = penciled.create(getSelection()!.getRangeAt(0), { color: 'yellow' });
+
+// Later, even after the DOM changed: a Range, or null if the text can't be found with confidence.
+const range = annotation && penciled.getRange(annotation.id);
+```
+
+## What happens to a highlight when the text changes?
+
+Small edits are fine: the highlight is found again by its quote and context, even if the quote changed by up to about a quarter. If the passage is rewritten more than that, or penciled can't tell which of several matches is the right one, the highlight is orphaned: not painted, but kept.
+
+### Orphans
 
 An orphaned annotation is one whose text can't be found with confidence. It is:
 
@@ -50,6 +75,10 @@ penciled.on('orphan', (annotation) => {
 ```
 
 Highlighting the wrong passage would be worse than highlighting nothing: a note attached to the wrong sentence is misleading, and a reader may not notice. So when a passage is repeated, for example a short phrase that appears several times, penciled relies on the surrounding text to tell the occurrences apart. If the surroundings changed too much to tell, it orphans the annotation.
+
+## Do highlights survive when the URL changes?
+
+Only if the annotations are looked up under the same id. By default the library stores annotations under the page's path (`location.pathname`, plus the container's `id`), so the same content at a new path starts empty, and the query string and `#fragment` are ignored. To keep highlights when URLs change, or in a single-page app where the URL doesn't identify the content, set [`documentId`](/reference/options/#documentid) to something stable, like a post id. In the [browser extension](/extension/#do-my-highlights-come-back-when-i-reload-or-revisit-the-page), highlights are saved per page address, so a page that moves to a new address doesn't show the old highlights there.
 
 ## Dynamic content
 

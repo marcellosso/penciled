@@ -4,9 +4,13 @@ metaTitle: 'Save highlights and notes to a REST API'
 description: 'Save text highlights and annotations to your own backend or REST API with a penciled storage adapter: load, save, create, update and delete.'
 ---
 
-By default annotations live in the reader's `localStorage`. To store them on your server, for example per signed-in user, pass a storage adapter: an object with async `load` and `save` methods.
+A storage adapter is how penciled.org saves highlights and notes somewhere other than the reader's `localStorage`: an object with async `load` and `save` methods that you point at your own API.
 
-## The minimal adapter
+## How do I save user highlights to my own database?
+
+Pass `annotate()` a storage adapter that calls your API, and store the annotations it sends in a table keyed by document and user. penciled calls `load` when the page opens and `save` (or `create`, `update` and `delete`) whenever a reader changes something. The sections below show the adapter, a [table schema](#storing-the-data), and how to handle [errors](#errors-and-offline).
+
+### The minimal adapter
 
 `save` receives every annotation in the document, so a backend that stores one JSON document per page needs only two endpoints:
 
@@ -33,7 +37,7 @@ const storage: AnnotationStorage = {
 annotate('#article', { documentId: 'post-42', storage });
 ```
 
-## One request per change
+### One request per change
 
 For a REST API with a row per annotation, add `create`, `update` and `delete`. penciled then sends each change on its own instead of calling `save`:
 

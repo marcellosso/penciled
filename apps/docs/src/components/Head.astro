@@ -1,7 +1,8 @@
 ---
 // Starlight's head with descriptive titles and structured data, plus PostHog analytics.
 import Default from '@astrojs/starlight/components/Head.astro';
-import { disambiguation, faq } from '../faq.ts';
+import { alternativesFaq } from '../alternatives.ts';
+import { disambiguation, type Faq, faq } from '../faq.ts';
 
 const route = Astro.locals.starlightRoute;
 const { data } = route.entry;
@@ -28,6 +29,10 @@ if (notFound) {
     route.head.push({ tag: 'link', attrs: { rel: 'canonical', href: new URL('/404', site).href } });
   }
 }
+
+// Pages whose questions are also published as FAQPage structured data.
+const faqPages: Record<string, Faq[]> = { faq, alternatives: alternativesFaq };
+const faqs = faqPages[route.id];
 
 const url = !notFound && site && new URL(Astro.url.pathname, site).href;
 const home = site?.href;
@@ -60,14 +65,14 @@ const structuredData = url &&
         { '@type': 'ListItem', position: 2, name: data.title, item: url },
       ],
     },
-    ...(route.id === 'faq'
+    ...(faqs
       ? [
           {
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
             url,
             about: project,
-            mainEntity: faq.map(({ question, answer }) => ({
+            mainEntity: faqs.map(({ question, answer }) => ({
               '@type': 'Question',
               name: question,
               acceptedAnswer: { '@type': 'Answer', text: answer },

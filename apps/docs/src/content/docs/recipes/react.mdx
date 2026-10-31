@@ -4,9 +4,15 @@ metaTitle: 'React text highlights & notes component'
 description: Highlight text and add annotations in React with the useAnnotations() hook or the <Annotatable> component. SSR-safe, works with Next.js.
 ---
 
-`penciled/react` wraps [`annotate()`](/reference/options/) in a hook and a component that create the instance when the component mounts and destroy it when it unmounts. React 18 and later are supported.
+`penciled/react` is the React adapter of penciled.org: a hook and a component that let readers highlight text and add notes in React, without wrapping text in spans. They wrap [`annotate()`](/reference/options/), creating the instance when the component mounts and destroying it when it unmounts. React 18 and later are supported.
 
-Because penciled never changes the DOM, React can re-render the annotated content as often as it likes. Highlights stay in place.
+## How do I highlight selected text in React without wrapping it in spans?
+
+Wrap the content in `<Annotatable>`, or pass a ref to `useAnnotations()`. penciled paints highlights with the [CSS Custom Highlight API](/guides/highlight-without-spans/), so no `<span>` or `<mark>` is added to the markup React owns, and React can re-render the annotated content as often as it likes. Highlights stay in place.
+
+## Why do mark.js highlights disappear after a React re-render?
+
+Because mark.js changes the DOM behind React's back. It wraps matches in `<mark>` elements, and when React re-renders that part of the tree it restores the markup it expects, dropping the `<mark>` elements, or it fails because the text nodes it tracked were split. Re-running mark.js after every render works around it, but you're still fighting React for the same nodes. Highlights painted with the CSS Custom Highlight API have no elements for React to remove. For highlighting search terms, mark.js is still the better fit; see the [comparison](/compare/).
 
 ## `<Annotatable>`
 
@@ -87,21 +93,46 @@ The instance is created once, so not every option can change on the fly:
 </Annotatable>
 ```
 
-## Next.js and other SSR frameworks
+## How do I add text annotations to a Next.js App Router app?
 
-Importing `penciled/react` on the server is safe, and the instance is only created in the browser, in an effect. In the Next.js App Router, the component using the hook or `<Annotatable>` must be a client component:
+Put the annotated content in a client component, and pass server-rendered content into it as `children`. Importing `penciled/react` on the server is safe, and the instance is only created in the browser, in an effect, so this works in the App Router, the Pages Router and other SSR frameworks.
 
-```tsx
+```tsx title="app/posts/[slug]/annotated-article.tsx"
 'use client';
 
 import { Annotatable } from 'penciled/react';
+import type { ReactNode } from 'react';
 
-export function AnnotatedArticle({ children }) {
-  return <Annotatable options={{ documentId: 'docs' }}>{children}</Annotatable>;
+export function AnnotatedArticle({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <Annotatable as="article" options={{ documentId: `post:${id}` }}>
+      {children}
+    </Annotatable>
+  );
 }
 ```
 
-Server components can be passed in as `children`. Import `penciled/styles.css` once, for example in your root layout.
+```tsx title="app/posts/[slug]/page.tsx"
+import { AnnotatedArticle } from './annotated-article';
+import { getPost } from '@/lib/posts';
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = await getPost(slug);
+  return (
+    <AnnotatedArticle id={post.id}>
+      <h1>{post.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: post.html }} />
+    </AnnotatedArticle>
+  );
+}
+```
+
+```tsx title="app/layout.tsx"
+import 'penciled/styles.css';
+```
+
+The page stays a server component; only `AnnotatedArticle` runs in the browser. Set `documentId` to something that identifies the content, like the post's id: client-side navigation then gives each post its own annotations, and changing `documentId` creates a new instance. To save highlights per user, pass a [storage adapter](/recipes/rest-storage/) in `options`.
 
 ## Showing annotations in React
 
