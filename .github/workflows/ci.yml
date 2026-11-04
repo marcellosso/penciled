@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          # The docs build dates sitemap pages from git history, and fails without it.
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
