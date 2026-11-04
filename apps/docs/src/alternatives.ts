@@ -1,9 +1,11 @@
 // The questions on /alternatives/ and its FAQPage structured data. Prices and plan limits of other
 // tools may only appear when they were read on the vendor's own page; the page cites each one with
-// the date it was checked. Update that date whenever a figure is re-checked.
+// the date it was checked. Update a row's date whenever its figures are re-checked.
 import type { Faq } from './faq.ts';
 
 export const checked = '31 October 2026';
+// Glasp, Diigo and Memex were re-checked on this date.
+export const rechecked = '3 November 2026';
 
 export const alternativesFaq: Faq[] = [
   {
@@ -12,9 +14,9 @@ export const alternativesFaq: Faq[] = [
       "penciled for the browser, the penciled.org highlighter extension, is free with no paid plan and no storage cap of its own: it asks the browser for unlimited extension storage. Weava's free plan includes unlimited highlights and 100 MB of storage, according to Weava's pricing page. Weava, unlike penciled, syncs between devices, so pick it if you read on several computers.",
   },
   {
-    question: 'Is there a Glasp alternative that keeps highlights private for free?',
+    question: 'Is there a Glasp alternative that keeps highlights private by default?',
     answer:
-      "Yes: the penciled.org highlighter extension is private by design and free. There's no account, highlights stay in your browser, and nothing is sent anywhere. Glasp is a social highlighter: its pricing page says highlights are public by default, and its free plan lists unlimited public highlights. Glasp is the better choice if you want to share highlights and follow what other readers save.",
+      "Yes: the penciled.org highlighter extension is private by design and free. There's no account, highlights stay in your browser, and nothing is sent anywhere. Glasp is a social highlighter: its pricing page says highlights are public by default, though on every plan, Free included, you can keep a page's highlights private, and they're kept in your Glasp account. Glasp is the better choice if you want to share highlights and follow what other readers save.",
   },
   {
     question: 'Is there a Liner alternative that just highlights?',

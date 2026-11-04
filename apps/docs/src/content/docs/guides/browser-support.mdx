@@ -10,9 +10,13 @@ penciled draws highlights with the [CSS Custom Highlight API](/guides/anchoring/
 |---|---|---|
 | Chrome, Edge (desktop and Android) | 105+ | 123+ |
 | Safari (macOS and iOS) | 17.2+ | 17.5+ |
-| Firefox (desktop and Android) | 140+ | 140+ |
+| Firefox (desktop and Android) | 140+ (partial `::highlight()` support until 149, see below) | 140+ |
 
 The **Highlight API** column is the minimum for the engine to work, for example with [`penciled/headless`](/reference/headless/) and your own styles. The **default styles** column is the minimum for `penciled/styles.css` to look right: in older versions `light-dark()` isn't understood, so highlight colors and the toolbar's colors don't apply.
+
+### Firefox 140 to 148
+
+Firefox 140 to 148 support the `::highlight()` pseudo-element only in part, according to [MDN's compatibility data](https://developer.mozilla.org/en-US/docs/Web/CSS/::highlight#browser_compatibility): `text-decoration` is ignored before Firefox 146, and `text-shadow` before Firefox 149. penciled paints highlights with `background-color`, which works from Firefox 140, so highlighting, notes and the browser extension work the same there. The one difference: with [`noteIndicator: 'underline'`](/reference/options/#noteindicator), highlights that have a note show without their underline in Firefox 140 to 145. If you style `::highlight()` yourself with `text-shadow`, it shows from Firefox 149.
 
 Desktop and mobile are both supported. On touch devices the toolbar opens below the selection, so it doesn't collide with the operating system's own selection menu, and its buttons are larger.
 

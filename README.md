@@ -9,7 +9,7 @@
 
 Use it to add Medium-style highlights and notes to a blog, docs site or web app, with no backend required.
 
-Not to be confused with Penciled, the healthcare company at penciled.com.
+penciled.org is an open-source text highlighting library and browser extension. It is not affiliated with PENCIL, the nonprofit at pencil.org, or with Penciled, the healthcare company at penciled.com.
 
 **Browser support:** Chrome/Edge 105+, Safari 17.2+, Firefox 140+; no fallback on older browsers, `annotate()` only warns. [Details](https://www.penciled.org/guides/browser-support/)
 
@@ -92,7 +92,7 @@ annotator.on('select', (context) => {
 
 ## Browser support
 
-Chrome and Edge 105+, Safari 17.2+ and Firefox 140+, on desktop and mobile. With the default styles, the minimums are Chrome and Edge 123+ and Safari 17.5+. In older browsers `annotate()` logs a warning and does nothing. Importing is safe during server-side rendering. See [Browser support](https://www.penciled.org/guides/browser-support/).
+Chrome and Edge 105+, Safari 17.2+ and Firefox 140+, on desktop and mobile. With the default styles, the minimums are Chrome and Edge 123+ and Safari 17.5+. Firefox 140 to 148 support `::highlight()` only in part, which affects only the optional note underline (`noteIndicator: 'underline'`): it shows from Firefox 146. In older browsers `annotate()` logs a warning and does nothing. Importing is safe during server-side rendering. See [Browser support](https://www.penciled.org/guides/browser-support/).
 
 ## FAQ
 
@@ -136,9 +136,9 @@ No. The extension and the library highlight text on web pages, not PDFs. For PDF
 
 Yes, as a file. **Export as Markdown** on the extension's notes page downloads a `.md` file with each highlight quoted with its note, which you can open in Obsidian, Logseq or any notes app. There's no integration or sync with them: each export is a one-off copy.
 
-### Is this penciled.com, the healthcare company?
+### Is penciled.org related to Penciled (healthcare) or PENCIL (the nonprofit)?
 
-No. penciled.org is an open-source JavaScript highlights & notes library and browser extension, at [www.penciled.org](https://www.penciled.org). It is not related to Penciled, the healthcare company at penciled.com.
+No. penciled.org is an open-source text highlighting library and browser extension. It is not affiliated with PENCIL, the nonprofit at pencil.org, or with Penciled, the healthcare company at penciled.com.
 
 
 ## Development
