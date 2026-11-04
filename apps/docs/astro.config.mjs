@@ -17,7 +17,12 @@ const ogImage = new URL('/og.png', site).href;
 // The source file behind a sitemap URL: a docs page, or the hand-written landing page.
 const src = fileURLToPath(new URL('./src/', import.meta.url));
 // Data files whose text appears on a page, so a change to them changes the page too.
-const pageData = { '/': ['faq.ts'], '/faq/': ['faq.ts'] };
+const pageData = {
+  '/': ['faq.ts', 'skins.ts'],
+  '/faq/': ['faq.ts'],
+  '/alternatives/': ['alternatives.ts'],
+  '/playground/': ['components/Playground.astro'],
+};
 function sourceFile(pathname) {
   if (pathname === '/') return `${src}pages/index.astro`;
   const slug = pathname.replace(/^\/|\/$/g, '');

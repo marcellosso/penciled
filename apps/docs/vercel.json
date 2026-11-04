@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
-  "buildCommand": "cd ../.. && (GIT_TERMINAL_PROMPT=0 git fetch --unshallow --quiet || true) && pnpm docs:build",
+  "buildCommand": "cd ../.. && pnpm docs:build",
   "outputDirectory": "dist",
   "redirects": [
     {
