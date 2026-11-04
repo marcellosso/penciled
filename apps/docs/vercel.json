@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
-  "buildCommand": "cd ../.. && (GIT_TERMINAL_PROMPT=0 git fetch --unshallow --quiet || GIT_TERMINAL_PROMPT=0 git fetch --unshallow --quiet https://github.com/marcellosso/penciled.git || true) && pnpm docs:build",
+  "buildCommand": "cd ../.. && (git --version; git remote -v; GIT_TERMINAL_PROMPT=0 git fetch --unshallow || GIT_TERMINAL_PROMPT=0 git fetch --unshallow https://github.com/marcellosso/penciled.git || true; git rev-parse --is-shallow-repository; git rev-list --count HEAD) && pnpm docs:build",
   "outputDirectory": "dist",
   "redirects": [
     {
