@@ -92,7 +92,7 @@ annotator.on('select', (context) => {
 
 ## Browser support
 
-Chrome and Edge 105+, Safari 17.2+ and Firefox 140+, on desktop and mobile. With the default styles, the minimums are Chrome and Edge 123+ and Safari 17.5+. In older browsers `annotate()` logs a warning and does nothing. Importing is safe during server-side rendering. See [Browser support](https://www.penciled.org/guides/browser-support/).
+Chrome and Edge 105+, Safari 17.2+ and Firefox 140+, on desktop and mobile. With the default styles, the minimums are Chrome and Edge 123+ and Safari 17.5+. Firefox 140 to 148 support `::highlight()` only in part, which affects only the optional note underline (`noteIndicator: 'underline'`): it shows from Firefox 146. In older browsers `annotate()` logs a warning and does nothing. Importing is safe during server-side rendering. See [Browser support](https://www.penciled.org/guides/browser-support/).
 
 ## FAQ
 
