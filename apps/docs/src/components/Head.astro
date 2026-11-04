@@ -16,8 +16,8 @@ if (data.metaTitle) {
   }
 }
 
-// The 404 page is served at every missing URL, so it must not be indexed. Its canonical still
-// names the www host, so no tag on the site ever points at the apex domain.
+// The 404 page is served at every missing URL, so it must not be indexed, and it has no canonical:
+// a canonical would claim every missing URL is a copy of /404.
 const notFound = route.id === '404';
 const site = Astro.site && new URL('/', Astro.site);
 if (notFound) {
@@ -25,9 +25,6 @@ if (notFound) {
     (tag) => tag.attrs?.rel !== 'canonical' && tag.attrs?.property !== 'og:url',
   );
   route.head.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex' } });
-  if (site) {
-    route.head.push({ tag: 'link', attrs: { rel: 'canonical', href: new URL('/404', site).href } });
-  }
 }
 
 // Pages whose questions are also published as FAQPage structured data.

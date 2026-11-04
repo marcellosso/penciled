@@ -9,7 +9,7 @@
 
 Use it to add Medium-style highlights and notes to a blog, docs site or web app, with no backend required.
 
-Not to be confused with Penciled, the healthcare company at penciled.com.
+Not to be confused with PENCIL, the nonprofit at pencil.org, or Penciled, the healthcare company at penciled.com.
 
 **Browser support:** Chrome/Edge 105+, Safari 17.2+, Firefox 140+; no fallback on older browsers, `annotate()` only warns. [Details](https://www.penciled.org/guides/browser-support/)
 
@@ -132,9 +132,9 @@ No. The extension and the library highlight text on web pages, not PDFs. For PDF
 
 Yes, as a file. **Export as Markdown** on the extension's notes page downloads a `.md` file with each highlight quoted with its note, which you can open in Obsidian, Logseq or any notes app. There's no integration or sync with them: each export is a one-off copy.
 
-### Is this penciled.com, the healthcare company?
+### Is penciled.org related to Penciled (healthcare) or PENCIL (the nonprofit)?
 
-No. penciled.org is an open-source JavaScript highlights & notes library and browser extension, at [www.penciled.org](https://www.penciled.org). It is not related to Penciled, the healthcare company at penciled.com.
+No. penciled.org is an open-source text highlighting library and browser extension, at [www.penciled.org](https://www.penciled.org). It is not affiliated with Penciled, the healthcare company at penciled.com, or with PENCIL, the nonprofit at pencil.org.
 
 
 ## License

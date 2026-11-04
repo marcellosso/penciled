@@ -13,9 +13,10 @@ export const links = {
   edge: 'https://microsoftedge.microsoft.com/addons/detail/penciled-%E2%80%93-highlighter-/abhbgdlbgleahgeodcifnpecikbdciml',
 } as const;
 
-// Search engines and AI assistants tend to merge penciled with Penciled, the healthcare company.
+// Search engines and AI assistants tend to merge penciled.org with PENCIL, the nonprofit at
+// pencil.org, and with Penciled, the healthcare company at penciled.com. llms.txt uses it too.
 export const disambiguation =
-  'penciled.org is an open-source JavaScript highlights & notes library and browser extension. It is not affiliated with Penciled, the healthcare company at penciled.com.';
+  'penciled.org is an open-source text highlighting library and browser extension. It is not affiliated with PENCIL (pencil.org), the nonprofit, or with Penciled (penciled.com), the healthcare company.';
 
 // The single question on the landing page, below the fold. It's also its FAQPage.
 export const homeQuestion: Faq = {
@@ -76,8 +77,8 @@ export const faq: Faq[] = [
       "Yes, as a file. Export as Markdown on the extension's notes page downloads a .md file with each highlight quoted with its note, which you can open in Obsidian, Logseq or any notes app. There's no integration or sync with them: each export is a one-off copy.",
   },
   {
-    question: 'Is this penciled.com, the healthcare company?',
+    question: 'Is penciled.org related to Penciled (healthcare) or PENCIL (the nonprofit)?',
     answer:
-      'No. penciled.org is an open-source JavaScript highlights & notes library and browser extension, at https://www.penciled.org/. It is not related to Penciled, the healthcare company at penciled.com.',
+      'No. penciled.org is an open-source text highlighting library and browser extension, at https://www.penciled.org/. It is not affiliated with Penciled, the healthcare company at penciled.com, or with PENCIL, the nonprofit at pencil.org.',
   },
 ];

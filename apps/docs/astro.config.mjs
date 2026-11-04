@@ -1,13 +1,72 @@
+import { execFileSync } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import starlightLlmsTxt from 'starlight-llms-txt';
 import { graphiteDark, graphiteLight } from './src/code-themes.mjs';
+import { disambiguation } from './src/faq.ts';
 
 // The public URL, for canonical links, Open Graph and the sitemap. Set SITE_URL to override it.
 // It must be the primary domain on Vercel: the apex redirects to www, and a canonical URL that
 // redirects is ignored by search engines.
 const site = process.env.SITE_URL ?? 'https://www.penciled.org';
 const ogImage = new URL('/og.png', site).href;
+
+// The source file behind a sitemap URL: a docs page, or the hand-written landing page.
+const src = fileURLToPath(new URL('./src/', import.meta.url));
+function sourceFile(pathname) {
+  if (pathname === '/') return `${src}pages/index.astro`;
+  const slug = pathname.replace(/^\/|\/$/g, '');
+  const base = `${src}content/docs/${slug}`;
+  return [`${base}.mdx`, `${base}.md`, `${base}/index.mdx`, `${base}/index.md`].find((file) =>
+    existsSync(file),
+  );
+}
+
+// Commits that are the boundary of a shallow clone appear to touch every file, so their dates say
+// nothing about when a page changed.
+let shallowBoundary;
+function isShallowBoundary(commit) {
+  if (!shallowBoundary) {
+    try {
+      const file = execFileSync(
+        'git',
+        ['rev-parse', '--path-format=absolute', '--git-path', 'shallow'],
+        {
+          encoding: 'utf8',
+          cwd: src,
+        },
+      );
+      shallowBoundary = new Set(readFileSync(file.trim(), 'utf8').split('\n').filter(Boolean));
+    } catch {
+      shallowBoundary = new Set();
+    }
+  }
+  return shallowBoundary.has(commit);
+}
+
+// When a page last changed: its `lastUpdated` frontmatter if it has one, like Starlight, otherwise
+// the date of the last commit that touched it. Unknown dates are left out rather than guessed.
+function lastModified(pathname) {
+  const file = sourceFile(pathname);
+  if (!file) return undefined;
+  const frontmatter = readFileSync(file, 'utf8').match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
+  const override = frontmatter.match(/^lastUpdated:\s*['"]?(\d{4}-\d{2}-\d{2})/m)?.[1];
+  if (override) return new Date(override);
+  try {
+    const [commit, date] = execFileSync('git', ['log', '-1', '--format=%H %cI', '--', file], {
+      encoding: 'utf8',
+      cwd: src,
+    })
+      .trim()
+      .split(' ');
+    return date && !isShallowBoundary(commit) ? new Date(date) : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export default defineConfig({
   site,
@@ -29,6 +88,13 @@ export default defineConfig({
     },
   },
   integrations: [
+    // Starlight adds the sitemap itself unless it's already configured; this adds `lastmod`.
+    sitemap({
+      serialize(item) {
+        const lastmod = lastModified(new URL(item.url).pathname);
+        return lastmod ? { ...item, lastmod: lastmod.toISOString() } : item;
+      },
+    }),
     starlight({
       title: 'penciled',
       description:
@@ -39,13 +105,15 @@ export default defineConfig({
           projectName: 'penciled.org',
           description:
             'penciled.org is an open-source JavaScript library and browser extension for persistent text highlights and notes (local, no account). The library is 15 kB and published on npm as `penciled`; it is also known as penciled.js.',
+          // Right below the description, so it's read before anything else about the project.
           details: [
+            disambiguation,
+            '',
             "- `annotate('#article')` adds a floating toolbar and a note editor, and saves annotations to `localStorage` or a custom storage adapter.",
             '- Highlights are painted with the CSS Custom Highlight API, so the host DOM is never modified.',
             '- Entry points: `penciled` (with the default UI), `penciled/headless` (the engine only), `penciled/react` and `penciled/styles.css`.',
             '- It is a text annotation library, not a website review tool: no screenshots, drawing, threaded discussions, accounts or sync backend.',
             '- The browser extension, penciled for the browser, brings the same highlights and notes to any website in Chrome, Edge and Firefox. Highlights stay in the browser.',
-            '- Not to be confused with Penciled, the healthcare company at penciled.com. penciled.org is not affiliated with it.',
           ].join('\n'),
           optionalLinks: [
             { label: 'GitHub', url: 'https://github.com/marcellosso/penciled' },
