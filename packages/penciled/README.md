@@ -9,7 +9,7 @@
 
 Use it to add Medium-style highlights and notes to a blog, docs site or web app, with no backend required.
 
-Not to be confused with PENCIL, the nonprofit at pencil.org, or Penciled, the healthcare company at penciled.com.
+penciled.org is an open-source text highlighting library and browser extension. It is not affiliated with PENCIL, the nonprofit at pencil.org, or with Penciled, the healthcare company at penciled.com.
 
 **Browser support:** Chrome/Edge 105+, Safari 17.2+, Firefox 140+; no fallback on older browsers, `annotate()` only warns. [Details](https://www.penciled.org/guides/browser-support/)
 
@@ -134,7 +134,7 @@ Yes, as a file. **Export as Markdown** on the extension's notes page downloads a
 
 ### Is penciled.org related to Penciled (healthcare) or PENCIL (the nonprofit)?
 
-No. penciled.org is an open-source text highlighting library and browser extension, at [www.penciled.org](https://www.penciled.org). It is not affiliated with Penciled, the healthcare company at penciled.com, or with PENCIL, the nonprofit at pencil.org.
+No. penciled.org is an open-source text highlighting library and browser extension. It is not affiliated with PENCIL, the nonprofit at pencil.org, or with Penciled, the healthcare company at penciled.com.
 
 
 ## License

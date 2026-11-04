@@ -16,7 +16,7 @@ export const links = {
 // Search engines and AI assistants tend to merge penciled.org with PENCIL, the nonprofit at
 // pencil.org, and with Penciled, the healthcare company at penciled.com. llms.txt uses it too.
 export const disambiguation =
-  'penciled.org is an open-source text highlighting library and browser extension. It is not affiliated with PENCIL (pencil.org), the nonprofit, or with Penciled (penciled.com), the healthcare company.';
+  'penciled.org is an open-source text highlighting library and browser extension. It is not affiliated with PENCIL, the nonprofit at pencil.org, or with Penciled, the healthcare company at penciled.com.';
 
 // The single question on the landing page, below the fold. It's also its FAQPage.
 export const homeQuestion: Faq = {
@@ -78,7 +78,6 @@ export const faq: Faq[] = [
   },
   {
     question: 'Is penciled.org related to Penciled (healthcare) or PENCIL (the nonprofit)?',
-    answer:
-      'No. penciled.org is an open-source text highlighting library and browser extension, at https://www.penciled.org/. It is not affiliated with Penciled, the healthcare company at penciled.com, or with PENCIL, the nonprofit at pencil.org.',
+    answer: `No. ${disambiguation}`,
   },
 ];

@@ -16,6 +16,8 @@ const ogImage = new URL('/og.png', site).href;
 
 // The source file behind a sitemap URL: a docs page, or the hand-written landing page.
 const src = fileURLToPath(new URL('./src/', import.meta.url));
+// Data files whose text appears on a page, so a change to them changes the page too.
+const pageData = { '/': ['faq.ts'], '/faq/': ['faq.ts'] };
 function sourceFile(pathname) {
   if (pathname === '/') return `${src}pages/index.astro`;
   const slug = pathname.replace(/^\/|\/$/g, '');
@@ -48,7 +50,8 @@ function isShallowBoundary(commit) {
 }
 
 // When a page last changed: its `lastUpdated` frontmatter if it has one, like Starlight, otherwise
-// the date of the last commit that touched it. Unknown dates are left out rather than guessed.
+// the date of the last commit that touched it or its data files. Unknown dates are left out rather
+// than guessed.
 function lastModified(pathname) {
   const file = sourceFile(pathname);
   if (!file) return undefined;
@@ -56,7 +59,8 @@ function lastModified(pathname) {
   const override = frontmatter.match(/^lastUpdated:\s*['"]?(\d{4}-\d{2}-\d{2})/m)?.[1];
   if (override) return new Date(override);
   try {
-    const [commit, date] = execFileSync('git', ['log', '-1', '--format=%H %cI', '--', file], {
+    const files = [file, ...(pageData[pathname] ?? []).map((name) => `${src}${name}`)];
+    const [commit, date] = execFileSync('git', ['log', '-1', '--format=%H %cI', '--', ...files], {
       encoding: 'utf8',
       cwd: src,
     })

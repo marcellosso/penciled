@@ -27,8 +27,9 @@ if (notFound) {
   route.head.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex' } });
 }
 
-// Questions and answers from a page's own Markdown: every h2 that ends in a question mark, answered
-// by the text up to the next heading, so the FAQPage always matches what the page shows.
+// Questions and answers from a page's own Markdown: every h2 or h3 that ends in a question mark,
+// answered by the text up to the next heading, so the FAQPage always matches what the page shows.
+// Text after an "End of the FAQPage answers" comment, such as a closing call to action, is left out.
 function questionsFromHeadings(markdown: string): Faq[] {
   const plain = (text: string) =>
     text
@@ -40,8 +41,9 @@ function questionsFromHeadings(markdown: string): Faq[] {
       .replace(/\s+/g, ' ')
       .trim();
   return markdown
+    .split(/^\{\/\* End of the FAQPage answers/m)[0]
     .split(/^(?=#{1,6} )/m)
-    .map((section) => section.match(/^## (.+\?)\s*\n([\s\S]*)$/))
+    .map((section) => section.match(/^#{2,3} (.+\?)\s*\n([\s\S]*)$/))
     .filter((match) => match !== null)
     .map(([, question, answer]) => ({ question: plain(question), answer: plain(answer) }))
     .filter(({ answer }) => answer);
