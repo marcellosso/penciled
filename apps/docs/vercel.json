@@ -3,6 +3,13 @@
   "framework": "astro",
   "buildCommand": "cd ../.. && pnpm docs:build",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/((?!ingest(?:/|$)|404$)(?!.*/$)[^.]*[^/.])",
+      "destination": "/$1/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/sitemap-index.xml" },
     {
