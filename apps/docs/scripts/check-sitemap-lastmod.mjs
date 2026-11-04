@@ -23,7 +23,7 @@ if (missing.length > 0) {
   console.error(
     `check-sitemap-lastmod: ${missing.length} of ${urls.length} sitemap URLs have no lastmod:\n` +
       missing.map(({ loc }) => `  ${loc}`).join('\n') +
-      '\nMake sure the build has the full git history (not a shallow clone), and that lastmod.mjs finds the page source.',
+      '\nMake sure the build has the full git history (on Vercel, set VERCEL_DEEP_CLONE=true), and that sourceFile() in astro.config.mjs finds the page source.',
   );
   process.exit(1);
 }

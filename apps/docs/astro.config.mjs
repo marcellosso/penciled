@@ -1,8 +1,10 @@
+import { execFileSync } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import starlightLlmsTxt from 'starlight-llms-txt';
-import { lastModified } from './lastmod.mjs';
 import { graphiteDark, graphiteLight } from './src/code-themes.mjs';
 import { disambiguation } from './src/faq.ts';
 
@@ -11,6 +13,69 @@ import { disambiguation } from './src/faq.ts';
 // redirects is ignored by search engines.
 const site = process.env.SITE_URL ?? 'https://www.penciled.org';
 const ogImage = new URL('/og.png', site).href;
+
+// The source file behind a sitemap URL: a docs page, or the hand-written landing page.
+const src = fileURLToPath(new URL('./src/', import.meta.url));
+// Data files whose text appears on a page, so a change to them changes the page too.
+const pageData = {
+  '/': ['faq.ts', 'skins.ts'],
+  '/faq/': ['faq.ts'],
+  '/alternatives/': ['alternatives.ts'],
+  '/playground/': ['components/Playground.astro'],
+};
+function sourceFile(pathname) {
+  if (pathname === '/') return `${src}pages/index.astro`;
+  const slug = pathname.replace(/^\/|\/$/g, '');
+  const base = `${src}content/docs/${slug}`;
+  return [`${base}.mdx`, `${base}.md`, `${base}/index.mdx`, `${base}/index.md`].find((file) =>
+    existsSync(file),
+  );
+}
+
+// Commits that are the boundary of a shallow clone appear to touch every file, so their dates say
+// nothing about when a page changed.
+let shallowBoundary;
+function isShallowBoundary(commit) {
+  if (!shallowBoundary) {
+    try {
+      const file = execFileSync(
+        'git',
+        ['rev-parse', '--path-format=absolute', '--git-path', 'shallow'],
+        {
+          encoding: 'utf8',
+          cwd: src,
+        },
+      );
+      shallowBoundary = new Set(readFileSync(file.trim(), 'utf8').split('\n').filter(Boolean));
+    } catch {
+      shallowBoundary = new Set();
+    }
+  }
+  return shallowBoundary.has(commit);
+}
+
+// When a page last changed: its `lastUpdated` frontmatter if it has one, like Starlight, otherwise
+// the date of the last commit that touched it or its data files. Unknown dates are left out rather
+// than guessed.
+function lastModified(pathname) {
+  const file = sourceFile(pathname);
+  if (!file) return undefined;
+  const frontmatter = readFileSync(file, 'utf8').match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
+  const override = frontmatter.match(/^lastUpdated:\s*['"]?(\d{4}-\d{2}-\d{2})/m)?.[1];
+  if (override) return new Date(override);
+  try {
+    const files = [file, ...(pageData[pathname] ?? []).map((name) => `${src}${name}`)];
+    const [commit, date] = execFileSync('git', ['log', '-1', '--format=%H %cI', '--', ...files], {
+      encoding: 'utf8',
+      cwd: src,
+    })
+      .trim()
+      .split(' ');
+    return date && !isShallowBoundary(commit) ? new Date(date) : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export default defineConfig({
   site,
