@@ -1,0 +1,114 @@
+---
+title: Saving to Supabase
+metaTitle: "Save highlights and notes to Supabase"
+description: "Save text highlights and annotations to Supabase with a penciled storage adapter: load, create, update and delete, with per-user row-level security."
+---
+
+A storage adapter is how penciled.org saves highlights and notes somewhere other than the reader's `localStorage`: an object with async `load` and `save` methods that you point at your own backend. This recipe shows how to build one for [Supabase](https://supabase.com/), so each signed-in user's annotations live in a table they alone can read and write.
+
+## 1. Database setup
+
+Create a table to hold the annotations and enable row-level security, so users can only see and change their own rows. Run this in your Supabase project's SQL editor:
+
+```sql
+create table public.annotations (
+  id         text primary key,
+  user_id    uuid default auth.uid() not null,
+  document_id text not null,
+  data       jsonb not null,
+  updated_at timestamptz default now() not null
+);
+
+alter table public.annotations enable row level security;
+
+create policy "Users can manage their own annotations"
+  on public.annotations
+  for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+```
+
+Store the `Annotation` exactly as received in `data`. Take the user from the request's session on the server — the `default auth.uid()` above does that for you — rather than trusting a field sent by the client. If you'd rather store flat columns like the [REST recipe](/recipes/rest-storage/#storing-the-data), select and insert those fields instead of `data`; the adapter logic is otherwise identical.
+
+## 2. The storage adapter
+
+A penciled storage adapter is an object with async `load` and `save` methods, plus optional `create`, `update` and `delete` methods for sending one request per change. Install the Supabase client:
+
+```bash
+npm install @supabase/supabase-js
+```
+
+Create the client once, then implement the adapter against it:
+
+```ts
+import { createClient } from "@supabase/supabase-js";
+import { annotate, type AnnotationStorage } from "penciled";
+
+const supabase = createClient(
+  import.meta.env.PUBLIC_SUPABASE_URL,
+  import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+);
+
+const storage: AnnotationStorage = {
+  async load(documentId) {
+    const { data, error } = await supabase
+      .from("annotations")
+      .select("data")
+      .eq("document_id", documentId);
+    if (error) throw error;
+    return (data ?? []).map((row) => row.data);
+  },
+  // Required by the type, but unused: create/update/delete handle every change.
+  async save() {},
+  async create(documentId, annotation) {
+    const { error } = await supabase
+      .from("annotations")
+      .insert({ id: annotation.id, document_id: documentId, data: annotation });
+    if (error) throw error;
+  },
+  async update(documentId, annotation) {
+    const { error } = await supabase
+      .from("annotations")
+      .update({ data: annotation, updated_at: new Date().toISOString() })
+      .eq("id", annotation.id);
+    if (error) throw error;
+  },
+  async delete(documentId, id) {
+    const { error } = await supabase.from("annotations").delete().eq("id", id);
+    if (error) throw error;
+  },
+};
+
+annotate("#article", { documentId: "post-42", storage });
+```
+
+### One request per change
+
+As in the [REST recipe](/recipes/rest-storage/#one-request-per-change), providing `create`, `update` and `delete` means penciled sends each change on its own instead of calling `save`. Changes made within `saveDelay` (300 ms by default) are combined per annotation: highlighting a passage and then picking another color sends one `UPDATE`, and highlighting and then removing it sends nothing.
+
+### Switching users or documents
+
+The document id is fixed for the life of an instance, and the Supabase client is bound to the signed-in user's session. When either the signed-in user or the content changes, destroy the instance and create a new one:
+
+```ts
+let penciled = annotate("#article", { documentId: doc.id, storage });
+
+function onNavigate(next) {
+  penciled.destroy(); // saves pending changes first
+  penciled = annotate("#article", { documentId: next.id, storage });
+}
+```
+
+### Errors
+
+Saving is optimistic: a change appears immediately and is saved in the background. If a request fails, the error goes to `onError`, and the change stays on screen. penciled doesn't retry, so tell the reader:
+
+```ts
+annotate("#article", {
+  storage,
+  onError: () =>
+    showToast("Your highlights couldn’t be saved. Check your connection."),
+});
+```
+
+If `load` fails, the error goes to `onError`, the instance starts empty and `ready` still resolves. The reader can keep highlighting, but nothing is saved for the rest of that instance's life: `save` replaces the whole document, so saving after a failed load could erase annotations that are still on the server. Create a new instance (for example after the reader reloads or retries) to load and save again.
