@@ -13,6 +13,7 @@ import {
 } from '../../lib/settings.ts';
 import { hasSidebar } from '../../lib/sidebar.ts';
 import { disabledSites, setSiteEnabled } from '../../lib/sites.ts';
+import { describeStatus, setSyncEnabled, syncEnabled, syncStatus } from '../../lib/sync/state.ts';
 
 const dark = matchMedia('(prefers-color-scheme: dark)').matches;
 // Suggestions for new colors, in order.
@@ -30,11 +31,13 @@ export function section(title: string, ...children: (Node | string | false | und
 
 /** The settings tab. */
 export async function settingsView(): Promise<Node[]> {
-  const [settings, sites, usage, commands] = await Promise.all([
+  const [settings, sites, usage, commands, syncing, status] = await Promise.all([
     getSettings(),
     disabledSites(),
     colorUsage(),
     browser.commands.getAll(),
+    syncEnabled(),
+    syncStatus(),
   ]);
   const used = (c: PaletteColor) => usage.get(c.id) ?? 0;
   const visible = settings.colors.filter((c) => !c.hidden);
@@ -169,6 +172,11 @@ export async function settingsView(): Promise<Node[]> {
     setColors([...settings.colors, { id, label: `Color ${id.slice(1)}`, value }]);
   };
 
+  // Sync
+  const sync = h('input', { type: 'checkbox', checked: syncing, id: 'sync' });
+  sync.onchange = () => setSyncEnabled(sync.checked);
+  const firefox = navigator.userAgent.includes('Firefox');
+
   // Sites
   const siteRow = (site: string) => {
     const on = h('button', { type: 'button', class: 'link' }, 'Turn back on');
@@ -191,7 +199,7 @@ export async function settingsView(): Promise<Node[]> {
     h(
       'p',
       { class: 'hint' },
-      'Settings apply to every site, and follow you to your other computers.',
+      'Settings apply to every site, and follow you to your other computers. Highlights stay on this computer unless you turn on sync below.',
     ),
     section('Toolbar theme', theme),
     section(
@@ -233,6 +241,20 @@ export async function settingsView(): Promise<Node[]> {
           ),
           h('ul', { class: 'colors' }, ...retired.map(retiredRow)),
         ),
+    ),
+    section(
+      'Sync highlights',
+      h('label', { class: 'check' }, sync, 'Sync my highlights and notes to my other computers'),
+      h(
+        'p',
+        { class: 'hint' },
+        firefox
+          ? 'Through Firefox Sync: sign in to it, with Add-ons selected, on each computer. Firefox for Android doesn’t sync extensions’ data.'
+          : 'Through your browser’s sync: sign in to the browser with sync turned on, on each computer.',
+        ' penciled has no account or server of its own. Browser sync holds about 100 KB, so with many highlights only the most recently changed pages sync. Sync isn’t a backup: export one from the notes page.',
+      ),
+      syncing &&
+        h('p', { class: 'hint', role: 'status', 'data-sync-status': '' }, describeStatus(status)),
     ),
     section(
       'Sites where penciled is off',

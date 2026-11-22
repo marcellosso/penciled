@@ -97,6 +97,15 @@ export function stored(background: Worker): Promise<Record<string, unknown>> {
   );
 }
 
+/** penciled's highlights in browser sync: the keys of their items. */
+export function synced(background: Worker): Promise<string[]> {
+  return background.evaluate(async () =>
+    Object.keys(await (globalThis as unknown as Chrome).chrome.storage.sync.get(null)).filter((k) =>
+      k.startsWith('a:'),
+    ),
+  );
+}
+
 type Chrome = { chrome: typeof import('wxt/browser').browser };
 
 /** The id of the tab showing `page`, as the extension knows it. */

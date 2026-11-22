@@ -1,4 +1,4 @@
-import { expect, painted, select, stored, test } from './fixtures.ts';
+import { expect, synced as inSync, painted, select, stored, test } from './fixtures.ts';
 
 const ARTICLE = 'http://localhost:5180/article.html';
 const toolbar = '[data-penciled-popover=toolbar]';
@@ -92,4 +92,34 @@ test('colors can be added up to a full toolbar row, and unused ones removed', as
   await settings.locator('[data-color=c8]').getByRole('button', { name: 'Remove' }).click();
   await expect(settings.locator('.colors li')).toHaveCount(7);
   await expect(settings.getByText('Removed colors')).toHaveCount(0);
+});
+
+test('highlights go to browser sync only once it is turned on, and leave it when turned off', async ({
+  context,
+  background,
+  extension,
+}) => {
+  const synced = () => inSync(background);
+  const page = await context.newPage();
+  await page.goto(ARTICLE);
+  await select(page, 'lazy dog');
+  await page.locator(action('color-c1')).click();
+  await expect.poll(() => stored(background)).toHaveProperty([`page:${ARTICLE}`]);
+  await page.waitForTimeout(500);
+  expect(await synced()).toEqual([]);
+
+  const settings = await context.newPage();
+  await settings.goto(`${extension}/options.html#settings`);
+  const toggle = settings.getByRole('checkbox', { name: 'Sync my highlights and notes' });
+  await expect(toggle).not.toBeChecked();
+  await toggle.check();
+  await expect(settings.getByRole('status')).toHaveText('Your 1 page with highlights is syncing.', {
+    timeout: 10_000,
+  });
+  expect((await synced()).length).toBeGreaterThan(0);
+
+  await settings.getByRole('checkbox', { name: 'Sync my highlights and notes' }).uncheck();
+  await expect.poll(synced).toEqual([]);
+  // This computer's copy stays.
+  expect(await stored(background)).toHaveProperty([`page:${ARTICLE}`]);
 });

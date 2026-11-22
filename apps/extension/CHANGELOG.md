@@ -1,5 +1,9 @@
 # penciled for the browser
 
+## Unreleased
+
+- Sync your highlights and notes between computers, through your browser's own sync. Turn it on under **Sync highlights** in the settings, on each computer. It's off unless you turn it on, and needs no penciled account: Chrome and Edge sync it when you're signed in with sync on, Firefox when you're signed in to Firefox Sync with Add-ons selected. Browser sync holds about 100 KB, so with many highlights only the most recently changed pages sync; the settings say when that happens. Your highlights on each computer are always kept in full.
+
 ## 0.4.0
 
 - penciled's toolbar button now opens the sidebar. If you'd rather have the menu, choose **This page's highlights** under **The penciled button** in the settings. If you've changed any setting before, the button keeps opening the menu. Browsers without a sidebar always open the menu.

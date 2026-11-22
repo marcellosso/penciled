@@ -3,6 +3,7 @@ import { browser } from 'wxt/browser';
 import { h } from '../../lib/dom.ts';
 import { onSettings } from '../../lib/settings.ts';
 import { onDisabledSites } from '../../lib/sites.ts';
+import { onSyncState } from '../../lib/sync/state.ts';
 import { notesView } from './notes.ts';
 import { settingsView } from './settings.ts';
 
@@ -47,6 +48,7 @@ render();
 window.addEventListener('hashchange', render);
 onSettings(render);
 onDisabledSites(render);
+onSyncState(render);
 // Highlights added, changed or removed in open tabs.
 browser.storage.local.onChanged.addListener((changes) => {
   if (Object.keys(changes).some((key) => key.startsWith('page:'))) render();

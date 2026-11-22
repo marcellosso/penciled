@@ -19,7 +19,7 @@ Prices and plan limits are quoted only from each vendor's own page, on the date 
 
 | Tool | Free plan and price (from the vendor's page) | Where highlights are kept | Source |
 |---|---|---|---|
-| **penciled.org extension** | Free, no paid plan. No limit on highlights or storage. | Only in your browser; no account, no sync | [Privacy statement](/extension/privacy/) |
+| **penciled.org extension** | Free, no paid plan. No limit on highlights or storage. | In your browser; optional sync through your browser account, no penciled account | [Privacy statement](/extension/privacy/) |
 | **Weava** | Free: unlimited highlights and notes, 100 MB storage, sync with unlimited devices. Premium: see vendor (the page lists both $3.99/month and $7.99/month). | Synced to your Weava account | [weavatools.com/premium](https://www.weavatools.com/premium/), checked on {checked} |
 | **Glasp** | Free: unlimited public and private highlights; highlights are public by default, and any page's highlights can be kept private. Pro: $12.50/month billed yearly ($150/year). | Your Glasp account | [glasp.co/pricing](https://glasp.co/pricing), checked on {rechecked} |
 | **Liner** | Free: $0 (AI search features). Pro: $14.99/month billed yearly, or $17.99 monthly. Highlighter limits: see vendor. | See vendor | [liner.com/pricing](https://liner.com/pricing), checked on {checked} |
@@ -37,7 +37,7 @@ Prices and plan limits are quoted only from each vendor's own page, on the date 
 penciled for the browser does one thing: private highlights and notes on web pages, in one browser. Pick something else when you need:
 
 - **PDFs.** penciled doesn't highlight PDFs. Hypothesis, Glasp and Web Highlights work with PDFs.
-- **Cross-device sync.** penciled's highlights stay in the browser you made them in; you can move them with a backup file, but they don't sync. Weava syncs on its free plan, and Web Highlights with a paid plan.
+- **Cross-device sync.** penciled can sync highlights only through your browser's own sync, which holds about 100 KB, so with many highlights only the most recent pages sync, and it doesn't sync between different browsers. Weava syncs on its free plan, and Web Highlights with a paid plan.
 - **Research projects and collaboration.** If you organize sources in shared folders, a research tool fits better: Weava's plans list folders, sub-folders and collaboration.
 - **Social reading.** To share highlights, follow other readers or discuss a text in public or in groups, use Glasp or Hypothesis.
 - **AI answers and summaries.** penciled has no AI features; Liner and Glasp do.
@@ -46,7 +46,7 @@ penciled is not a read-later app or a Pocket replacement: it doesn't save copies
 
 ## Where does the penciled.org extension win?
 
-- **Nothing leaves your browser.** No account, no servers, no analytics, and the extension makes no network requests. See the [privacy statement](/extension/privacy/).
+- **No account, no servers.** No analytics, and the extension makes no network requests. Highlights stay in your browser, unless you turn on syncing them through your browser account. See the [privacy statement](/extension/privacy/).
 - **Free and open source.** MIT licensed, with no paid plan and no limit on highlights. Anyone can [read the source](https://github.com/marcellosso/penciled/tree/main/apps/extension).
 - **Pages stay as they are.** Highlights are painted by the browser with the CSS Custom Highlight API instead of wrapping text in elements, so the page's own markup and scripts aren't affected.
 - **It doesn't guess.** When a page changed so much that a highlight can't be placed with confidence, it's listed as not found instead of being put on the wrong words.

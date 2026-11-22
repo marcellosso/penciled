@@ -2,6 +2,8 @@ import { type Browser, browser } from 'wxt/browser';
 import { defineBackground } from 'wxt/utils/define-background';
 import { getSettings, onSettings } from '../lib/settings.ts';
 import { onButtonClicked, PORT, setButton, toggleSidebar } from '../lib/sidebar.ts';
+import { createSync } from '../lib/sync/engine.ts';
+import { storageSyncTransport } from '../lib/sync/transport.ts';
 
 export default defineBackground(() => {
   // Each open sidebar, by window, so the shortcut can close it. Sidebars connect again if this
@@ -33,4 +35,8 @@ export default defineBackground(() => {
     if (next.buttonOpens !== previous.buttonOpens) setButton(next.buttonOpens);
   });
   onButtonClicked();
+
+  // Highlights sync only once the reader turns it on. Merges on start, and on every change here
+  // or from another device.
+  createSync(storageSyncTransport()).start();
 });

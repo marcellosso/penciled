@@ -7,7 +7,7 @@ Screenshots are in `screenshots/` (1280×800), and the Chrome Web Store's promo 
 ## Listing
 
 - **Name:** penciled – Highlighter & Notes for any web page (from the manifest; "for web pages" on Firefox, which caps names at 45 characters)
-- **Summary:** Highlight text and take notes on any website. Your highlights come back when you return. Nothing leaves your browser. (from the manifest, under 132 characters)
+- **Summary:** Highlight text and take notes on any website. Your highlights come back when you return. No account, no servers. (from the manifest, under 132 characters)
 - **Category:** Productivity → Tools (Chrome) · Productivity (Edge) · Other (Firefox)
 - **Language:** English
 - **Homepage:** https://www.penciled.org/extension/
@@ -28,11 +28,11 @@ Highlight text and take notes on any website, like reading with a pencil in hand
 • Looks right on dark websites too.
 
 Private by design
-penciled has no account, no servers and no analytics. It makes no network requests: your highlights are saved in your browser and never leave it. It's open source, so you can check: https://github.com/marcellosso/penciled
+penciled has no account, no servers and no analytics. It makes no network requests: your highlights are saved in your browser. If you choose, your browser's own sync (Chrome Sync, Firefox Sync) can carry them to your other computers. It's open source, so you can check: https://github.com/marcellosso/penciled
 
 Highlights never change the page itself. They're drawn by the browser, so pages keep working exactly as before. If a page changes so much that penciled can't be sure where a highlight belongs, it doesn't guess: it lists the highlight as not found, so you can still read or delete it.
 
-Not supported yet: text inside frames (such as embedded posts), PDFs, and text fields. Highlights don't sync between computers; use export and import to move them.
+Not supported yet: text inside frames (such as embedded posts), PDFs, and text fields. Highlight sync goes through the browser's own sync, which holds about 100 KB, so with many highlights only the most recent pages sync; export and import move everything.
 
 Built on penciled, the open-source text annotation library: https://www.penciled.org
 ```

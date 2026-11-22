@@ -5,7 +5,7 @@ description: penciled.org's free, open-source highlighter extension for Chrome, 
 lastUpdated: 2026-11-03
 ---
 
-**penciled for the browser** is a free, open-source (MIT) highlighter extension for Chrome, Edge and Firefox that saves your highlights and notes on any web page locally, in your browser, and exports them as a Markdown (`.md`) file. It's the browser extension of penciled.org, built on the penciled JavaScript library and the CSS Custom Highlight API: no account and no cloud. Your highlights and notes are stored only in your browser and never sent to a server. Only your settings sync, through your browser account.
+**penciled for the browser** is a free, open-source (MIT) highlighter extension for Chrome, Edge and Firefox that saves your highlights and notes on any web page locally, in your browser, and exports them as a Markdown (`.md`) file. It's the browser extension of penciled.org, built on the penciled JavaScript library and the CSS Custom Highlight API: no account and no penciled servers. Your highlights and notes are stored in your browser. Your settings sync through your browser account, and your highlights can too, if you turn that on.
 
 ![An article with yellow and blue highlights, and penciled's toolbar open over a selected sentence.](../../../assets/extension.png)
 
@@ -34,13 +34,17 @@ When a page changes so much that penciled can't be sure where a highlight belong
 
 ## Is there a highlighter extension that doesn't need an account or cloud sync?
 
-Yes: penciled for the browser has no account and no cloud. Highlights are stored in your browser's extension storage, on your computer only. The flip side is that they don't sync between computers. Only your settings sync, through your browser account. To move highlights to another browser, use **Export a backup** on the notes page, then **Import a backup** in the other one.
+Yes: penciled for the browser has no account and no servers. Highlights are stored in your browser's extension storage, on your computer.
+
+To have them on your other computers too, turn on **Sync highlights** in the settings, on each computer. They then travel through your browser's own sync, not through penciled: Chrome and Edge sync them when you're signed in with sync on, Firefox when you're signed in to Firefox Sync with Add-ons selected (Firefox for Android doesn't sync extensions' data). Browser sync holds about 100 KB, a few hundred highlights, so with more than that only the most recently changed pages sync. The settings say when that happens, and every highlight stays on the computer you made it on.
+
+Sync isn't a backup, and doesn't work between different browsers. To keep a copy, or to move highlights to another browser, use **Export a backup** on the notes page, then **Import a backup** in the other one.
 
 Highlights are stored only in the browser you made them in, and uninstalling penciled deletes them, so export a backup now and then.
 
 ## Does penciled send my highlights anywhere?
 
-No. The extension makes no network requests: it has no servers, analytics, tracking, ads or accounts. Your highlights and notes stay in your browser. See the [privacy statement](/extension/privacy/), and the [source code](https://github.com/marcellosso/penciled/tree/main/apps/extension) if you'd like to check.
+No. The extension makes no network requests: it has no servers, analytics, tracking, ads or accounts. Your highlights and notes stay in your browser, unless you turn on syncing them through your browser's sync. See the [privacy statement](/extension/privacy/), and the [source code](https://github.com/marcellosso/penciled/tree/main/apps/extension) if you'd like to check.
 
 ## Which highlighter extension works in Chrome, Edge and Firefox?
 
@@ -62,7 +66,7 @@ It isn't for everything yet:
 
 - PDFs aren't supported, and neither is text inside frames, such as embedded posts.
 - Text fields and other editable areas are left alone.
-- Highlights don't sync between computers.
+- Highlights sync only through the browser's own sync, which holds about 100 KB, and only between the same browser on different computers.
 - It isn't a read-later app: it doesn't save copies of pages, only your highlights and notes on them.
 
 If you need one of these, see [alternatives to the penciled.org highlighter extension](/alternatives/) for tools that do.
