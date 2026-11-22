@@ -63,7 +63,7 @@ export async function deleteAnnotation(page: Page, id: string): Promise<void> {
   const key = pageKey(page.id);
   const data = (await browser.storage.local.get(key))[key] as PageData | undefined;
   const annotations = (data?.annotations ?? []).filter((a) => a.id !== id);
-  await writePage(page.id, page, annotations);
+  await writePage(page.id, page, annotations, [id]);
 }
 
 /** Sets one annotation's tags. A tab open on the page picks them up. */

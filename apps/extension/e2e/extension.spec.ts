@@ -50,7 +50,10 @@ test('adds a note in the shadow root, and removes highlights', async ({ context,
   await expect.poll(() => painted(page)).toMatchObject({ 'penciled-c1': ['bushy tail'] });
   await click(page, 'bushy tail');
   await page.locator(action('remove')).click();
-  await expect.poll(() => stored(background)).toEqual({});
+  // The page is gone. Only the deletion is remembered, so syncing can delete it elsewhere.
+  await expect
+    .poll(async () => Object.keys(await stored(background)).map((k) => k.split(':')[0]))
+    .toEqual(['deleted']);
 });
 
 test('ignores selections in editable content', async ({ context }) => {

@@ -1,6 +1,7 @@
 import { browser } from 'wxt/browser';
 
-// Sites where penciled is turned off. Kept on this computer, like the notes.
+// Sites where penciled is turned off. Kept on this computer, even with sync on: a site can be worth
+// turning off on one computer and not another.
 const KEY = 'disabled-sites';
 
 /** The site a URL belongs to, as shown to the reader and stored in the disabled list. */

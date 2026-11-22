@@ -3,7 +3,7 @@ import { browser } from 'wxt/browser';
 import { listPages, type Page } from './pages.ts';
 import { getSettings, nextColorId, type PaletteColor, saveSettings } from './settings.ts';
 import { siteOf } from './sites.ts';
-import { type PageData, pageEntries, pageKey } from './storage.ts';
+import { deletedKey, type PageData, pageEntries, pageKey, type Tombstone } from './storage.ts';
 import { tagsOf } from './tags.ts';
 import { pageId } from './url.ts';
 
@@ -50,6 +50,9 @@ export async function restoreBackup(data: unknown): Promise<number> {
 
   const stored = await browser.storage.local.get(null);
   const entries: Record<string, unknown> = {};
+  const now = new Date().toISOString();
+  // Restored annotations that were deleted here, whose deletion is forgotten.
+  const undeleted: string[] = [];
   let changed = 0;
   for (const page of backup.pages) {
     let id: string;
@@ -69,6 +72,14 @@ export async function restoreBackup(data: unknown): Promise<number> {
       a.color = color(a.color);
       const mine = merged.get(a.id);
       if (mine && mine.updatedAt >= a.updatedAt) continue;
+      // Restoring counts as a change made now, so syncing doesn't delete it again.
+      const tombstone = stored[deletedKey(a.id)] as Tombstone | undefined;
+      if (!mine && tombstone) {
+        // Later than the deletion, even within the same millisecond.
+        const after = new Date(Date.parse(tombstone.at) + 1).toISOString();
+        a.updatedAt = after > now ? after : now;
+        undeleted.push(deletedKey(a.id));
+      }
       merged.set(a.id, a);
       pageChanged = true;
       changed++;
@@ -80,6 +91,7 @@ export async function restoreBackup(data: unknown): Promise<number> {
 
   if (colors.length > settings.colors.length) await saveSettings({ colors });
   await browser.storage.local.set(entries);
+  if (undeleted.length) await browser.storage.local.remove(undeleted);
   return changed;
 }
 

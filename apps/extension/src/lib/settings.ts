@@ -42,7 +42,8 @@ export const DEFAULTS: Settings = {
   ],
 };
 
-// Synced, so they follow the reader to their other computers. Notes don't: they stay local.
+// Synced, so they follow the reader to their other computers. Notes sync only if the reader turns
+// that on (see sync/), and then under their own keys.
 const KEY = 'settings';
 
 export async function getSettings(): Promise<Settings> {

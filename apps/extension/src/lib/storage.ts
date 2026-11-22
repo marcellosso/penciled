@@ -16,18 +16,45 @@ export interface PageData {
   annotations: Annotation[];
 }
 
+/** A deleted annotation, remembered so that syncing deletes it on other devices too. */
+export interface Tombstone {
+  /** The id of the page it was on. */
+  page: string;
+  /** ISO 8601 timestamp. */
+  at: string;
+}
+
 /** Each page's annotations, and its metadata, live under their own keys. */
 export const pageKey = (id: string): string => `page:${id}`;
 export const metaKey = (id: string): string => `meta:${id}`;
+/**
+ * Each deletion gets its own key, so two tabs deleting at once never overwrite each other's.
+ * Annotation ids are unique across pages.
+ */
+export const deletedKey = (annotationId: string): string => `deleted:${annotationId}`;
 
-/** Stores `annotations` as page `id`'s, or removes the page when there are none left. */
+/** The storage entries recording that annotations `ids` on page `page` were deleted now. */
+export function tombstones(page: string, ids: string[]): Record<string, Tombstone> {
+  const at = new Date().toISOString();
+  return Object.fromEntries(ids.map((id) => [deletedKey(id), { page, at }]));
+}
+
+/**
+ * Stores `annotations` as page `id`'s, or removes the page when there are none left. `deleted`
+ * lists the annotations this change deleted.
+ */
 export async function writePage(
   id: string,
   page: { url: string; title: string },
   annotations: Annotation[],
+  deleted: string[] = [],
 ): Promise<void> {
-  if (!annotations.length) return browser.storage.local.remove([pageKey(id), metaKey(id)]);
-  await browser.storage.local.set(pageEntries(id, page, annotations));
+  const gone = tombstones(id, deleted);
+  if (!annotations.length) {
+    if (deleted.length) await browser.storage.local.set(gone);
+    return browser.storage.local.remove([pageKey(id), metaKey(id)]);
+  }
+  await browser.storage.local.set({ ...gone, ...pageEntries(id, page, annotations) });
 }
 
 /** The storage entries for page `id`, to write several pages at once. */
@@ -60,7 +87,15 @@ export function extensionStorage(page: () => { url: string; title: string }): An
   };
 
   const change = (id: string, edit: (annotations: Annotation[]) => Annotation[]) => {
-    const next = queue.then(async () => writePage(id, page(), edit(await read(id))));
+    const next = queue.then(async () => {
+      const before = await read(id);
+      const after = edit(before);
+      // Compared with what this tab read, not with what's stored now: annotations another tab or
+      // a sync added meanwhile weren't deleted here.
+      const kept = new Set(after.map((a) => a.id));
+      const deleted = before.filter((a) => !kept.has(a.id)).map((a) => a.id);
+      await writePage(id, page(), after, deleted);
+    });
     queue = next.catch(() => {});
     return next;
   };

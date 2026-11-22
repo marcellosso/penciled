@@ -65,7 +65,7 @@ const structuredData = {
       name: 'penciled for the browser',
       alternateName: ['penciled browser extension', 'penciled – Highlighter & Notes'],
       description:
-        'A free, open-source browser extension for highlighting text and taking notes on any website. Highlights stay in the browser: no account, nothing is sent anywhere.',
+        'A free, open-source browser extension for highlighting text and taking notes on any website. Highlights stay in the browser: no account, no servers.',
       disambiguatingDescription: disambiguation,
       ...(canonical && { url: new URL('/extension/', canonical).href }),
       applicationCategory: 'BrowserApplication',
@@ -226,7 +226,7 @@ export function Post({ post }) {
         <div class="bands">
           <section class="band" aria-labelledby="band-extension">
             <h2 id="band-extension">Get the extension</h2>
-            <p>Highlight and take notes on any website. Free, and nothing leaves your browser.</p>
+            <p>Highlight and take notes on any website. Free, no account, no servers.</p>
             <div class="stores">
               <a class="store" href={chrome}>Chrome</a>
               <a class="store" href={firefox}>Firefox</a>

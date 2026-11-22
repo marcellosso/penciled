@@ -37,7 +37,7 @@ export default defineConfig({
         : 'penciled – Highlighter & Notes for any web page',
     short_name: 'penciled',
     description:
-      'Highlight text and take notes on any website. Your highlights come back when you return. Nothing leaves your browser.',
+      'Highlight text and take notes on any website. Your highlights come back when you return. No account, no servers.',
     homepage_url: 'https://www.penciled.org/extension/',
     // The first versions with both the Highlight API and light-dark(), which penciled's colors use.
     ...(browser === 'firefox'
@@ -54,7 +54,8 @@ export default defineConfig({
           },
         }
       : { minimum_chrome_version: '123' }),
-    // Notes stay in this browser; unlimitedStorage lifts the 10 MB cap without an install warning.
+    // unlimitedStorage lifts storage.local's 10 MB cap without an install warning. It doesn't change
+    // storage.sync's quota.
     permissions: ['storage', 'unlimitedStorage'],
     commands: {
       toggle: {

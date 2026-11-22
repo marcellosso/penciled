@@ -1,24 +1,33 @@
 ---
 title: Extension privacy statement
 metaTitle: 'Highlighter extension privacy: no data collected'
-description: 'The penciled.org highlighter extension collects nothing: your highlights and notes stay in your browser and are never sent anywhere.'
+description: 'The penciled.org highlighter extension collects nothing and runs no servers: your highlights stay in your browser, unless you turn on syncing through your browser account.'
 ---
 
-_Last updated October 22, 2026._
+_Last updated November 21, 2026._
 
-**penciled for the browser**, the penciled.org highlighter extension, is a private, local-only extension: it doesn't collect, send or sell any data, and it makes no network requests. In short: **nothing leaves your browser.**
+**penciled for the browser**, the penciled.org highlighter extension, doesn't collect, send or sell any data. It makes no network requests, and has no servers or accounts. In short: **your highlights stay in your browser**, unless you turn on syncing them through your browser's own sync.
 
 ## Does penciled send my highlights anywhere?
 
-No. penciled makes no network requests. It has no servers, analytics, tracking, ads or accounts, so there's nowhere for your highlights to go.
+penciled itself doesn't: it makes no network requests, and has no servers, analytics, tracking, ads or accounts.
+
+If you turn on **Sync highlights** in the settings, penciled puts your highlights and notes, with each page's address and title, in your browser's extension sync storage. Your browser then syncs them to your other computers, through its vendor's sync service: Google's for Chrome, Microsoft's for Edge, Mozilla's for Firefox. penciled never sees them on the way, and doesn't add encryption of its own; they're protected as that vendor's sync protects data:
+
+- **Chrome:** Google says synced data is always encrypted, and that if you set a sync passphrase, Google can't read it. See [Google's help](https://support.google.com/chrome/answer/165139).
+- **Firefox:** Mozilla says Firefox Sync encrypts data end to end, before it leaves your browser. See [Mozilla's help](https://support.mozilla.org/kb/sync).
+- **Edge:** see Microsoft's privacy statement for Edge.
+
+Syncing is off unless you turn it on, on each computer. It only works when you're signed in to your browser with sync on (in Firefox, signed in to Firefox Sync with Add-ons selected). Turning it off removes your highlights from browser sync; the ones on your computer stay.
 
 ## What does it store, and where?
 
 Only what it needs to show your highlights again, in your browser's extension storage:
 
-- **Your highlights and notes**, with the address and title of each page you highlight on. They're kept on your computer only, and are deleted when you uninstall penciled.
+- **Your highlights and notes**, with the address and title of each page you highlight on. They're kept on your computer, and deleted when you uninstall penciled. If you turn on syncing, a copy goes through your browser's sync, as above.
+- **Which highlights you deleted, and when**, for 30 days, so that syncing deletes them on your other computers too.
 - **Your settings**: the toolbar theme, whether selecting text opens the toolbar, and your colors. If you're signed in to your browser with sync turned on, your browser syncs them to your other computers, as it does for any extension's settings.
-- **The sites you turned penciled off on**, on your computer only.
+- **The sites you turned penciled off on**, and whether syncing is on, on your computer only.
 
 ## Does it read the pages I visit?
 
@@ -27,7 +36,7 @@ Only to find your highlights on them. It doesn't read or keep anything from the 
 ## Why does it ask for these permissions?
 
 - **Read and change data on all websites**: so you can highlight on any site. penciled reads a page's text to find your highlights on it, and adds its toolbar on top. The page's own content isn't changed: highlights are drawn by the browser.
-- **Storage** and **unlimited storage**: to keep your highlights and settings, without a size limit.
+- **Storage** and **unlimited storage**: to keep your highlights and settings, without a size limit on your computer. Browser sync has its own, smaller limit, which unlimited storage doesn't change.
 
 ## How do I export or delete my highlights?
 
